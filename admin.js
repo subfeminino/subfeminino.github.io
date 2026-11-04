@@ -3,15 +3,17 @@ const REPO='subfeminino/subfeminino.github.io';
 const API='https://api.github.com/repos/'+REPO+'/contents/';
 const DB='data/articles.json';
 const EDITORS_DB='data/editors.json';
+const HOME_DB='data/home.json';
 const $=id=>document.getElementById(id);
-let token='',articles=[],selectedId=null,editorProfiles=[],selectedEditor=0;
+let token='',articles=[],selectedId=null,editorProfiles=[],selectedEditor=0,homeSettings=null;
 const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function message(text,kind=''){const m=$('message');m.textContent=text;m.className=kind;}
 function encode64(text){const bytes=new TextEncoder().encode(text);let s='';for(let i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode(...bytes.slice(i,i+0x8000));return btoa(s);}
 function decode64(text){let s=atob(text.replace(/\s/g,''));return new TextDecoder().decode(Uint8Array.from(s,c=>c.charCodeAt(0)));}
 async function api(path,opt={}){const response=await fetch(API+path,{...opt,headers:{Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28',Authorization:'Bearer '+token,...opt.headers}});const result=await response.json().catch(()=>({}));if(!response.ok)throw Error((result.message||'Erro ao acessar GitHub')+' (HTTP '+response.status+')');return result;}
 async function readData(){const r=await api(DB+'?t='+Date.now());return {sha:r.sha,list:JSON.parse(decode64(r.content))};}
-async function sync(){const [data,people]=await Promise.all([readData(),readEditorData()]);articles=data.list;editorProfiles=people.list;renderList();renderEditorList();return data;}
+async function sync(){const [data,people,home]=await Promise.all([readData(),readEditorData(),readHomeData()]);articles=data.list;editorProfiles=people.list;homeSettings=home.settings;renderList();renderEditorList();renderHomeForm();return data;}
+async function readHomeData(){const r=await api(HOME_DB+'?t='+Date.now());return {sha:r.sha,settings:JSON.parse(decode64(r.content))};}
 async function readEditorData(){const r=await api(EDITORS_DB+'?t='+Date.now());return {sha:r.sha,list:JSON.parse(decode64(r.content))};}
 function renderList(){const parent=$('storyList');parent.innerHTML='';if(!articles.length)parent.textContent='Nenhuma matéria cadastrada.';for(const a of articles){const b=document.createElement('button');b.className='story'+(a.id===selectedId?' active':'');const title=document.createElement('strong');title.textContent=a.title||'Sem título';const small=document.createElement('small');small.textContent=(a.published?'Publicada':'Rascunho')+' · '+(a.category||a.section||'Sem editoria');b.append(title,small);b.onclick=()=>openStory(a.id);parent.append(b);}}
 
@@ -155,14 +157,18 @@ $('editor').addEventListener('paste',pastePlain);
 
 
 function switchPanel(mode){
- const editors=mode==='editors';
- $('articleSidebar').classList.toggle('hidden',editors);
+ const editors=mode==='editors',home=mode==='home',articlesMode=mode==='articles';
+ $('articleSidebar').classList.toggle('hidden',!articlesMode);
  $('editorsSidebar').classList.toggle('hidden',!editors);
- $('articlePanel').classList.toggle('hidden',editors);
+ $('homeSidebar').classList.toggle('hidden',!home);
+ $('articlePanel').classList.toggle('hidden',!articlesMode);
  $('editorsPanel').classList.toggle('hidden',!editors);
- $('tabArticles').classList.toggle('primary',!editors);
+ $('homePanel').classList.toggle('hidden',!home);
+ $('tabArticles').classList.toggle('primary',articlesMode);
  $('tabEditors').classList.toggle('primary',editors);
+ $('tabHome').classList.toggle('primary',home);
  if(editors)openEditorProfile(selectedEditor);
+ if(home)renderHomeForm();
 }
 function renderEditorList(){
  const el=$('editorList');el.replaceChildren();
@@ -185,6 +191,7 @@ function openEditorProfile(i){
 }
 $('tabArticles').onclick=()=>switchPanel('articles');
 $('tabEditors').onclick=()=>switchPanel('editors');
+$('tabHome').onclick=()=>switchPanel('home');
 $('editorPhoto').onchange=()=>{
  const f=$('editorPhoto').files[0];if(!f)return;
  if(f.size>4*1024*1024){editorMessage('A foto não pode ultrapassar 4 MB.',true);$('editorPhoto').value='';return;}
@@ -254,3 +261,53 @@ $('editor').addEventListener('drop',e=>{
  }
  insertArticleImage(file);
 });
+
+/* Editor da foto de abertura e Reportagem da semana */
+function homeMessage(text,error=false){const el=$('homeMessage');el.textContent=text;el.style.color=error?'#a30c2a':'#236a3c';}
+function renderHomeForm(){
+ if(!homeSettings)return;
+ $('homeHeroPhoto').value='';
+ $('homeHeroPreview').src=homeSettings.heroImage||'assets/capa.jpg';
+ $('homeEyebrow').value=homeSettings.heroEyebrow||'';
+ $('homeTitle').value=homeSettings.heroTitle||'';
+ $('homeDescription').value=homeSettings.heroDescription||'';
+ const list=$('featuredStory'),chosen=homeSettings.featuredId;
+ list.replaceChildren();
+ for(const a of articles.filter(a=>a.published!==false)){
+  const option=document.createElement('option');
+  option.value=a.id;option.textContent=a.title;list.append(option);
+ }
+ if(Array.from(list.options).some(a=>a.value===chosen))list.value=chosen;
+ updateFeaturedPreview();homeMessage('');
+}
+function updateFeaturedPreview(){
+ const a=articles.find(a=>a.id===$('featuredStory').value);
+ $('featuredPreview').textContent=a?'Destaque selecionado: '+a.title+' — capa: '+a.image:'Nenhuma matéria publicada disponível.';
+}
+$('featuredStory').onchange=updateFeaturedPreview;
+$('homeHeroPhoto').onchange=()=>{
+ const file=$('homeHeroPhoto').files[0];if(!file)return;
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>4*1024*1024){
+  homeMessage('Use uma imagem JPG, PNG ou WebP de até 4 MB.',true);$('homeHeroPhoto').value='';return;
+ }
+ $('homeHeroPreview').src=URL.createObjectURL(file);
+};
+$('saveHome').onclick=async()=>{
+ if(!token)return homeMessage('Conecte-se primeiro ao GitHub.',true);
+ const featuredId=$('featuredStory').value;
+ if(!articles.some(a=>a.id===featuredId&&a.published!==false))return homeMessage('Escolha uma reportagem publicada.',true);
+ const title=$('homeTitle').value.trim(),description=$('homeDescription').value.trim(),eyebrow=$('homeEyebrow').value.trim();
+ if(!title||!description)return homeMessage('Preencha o título e a descrição da abertura.',true);
+ const button=$('saveHome');button.disabled=true;homeMessage('Salvando a página inicial...');
+ try{
+  const latest=await readHomeData();
+  let image=latest.settings.heroImage||'assets/capa.jpg';
+  const photo=$('homeHeroPhoto').files[0];
+  if(photo){homeMessage('Enviando a nova foto da abertura...');image=await uploadImage(photo,'abertura');}
+  const settings={...latest.settings,heroImage:image,heroEyebrow:eyebrow,heroTitle:title,heroDescription:description,featuredId};
+  await api(HOME_DB,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'Atualiza abertura e reportagem da semana do Portal SUB',content:encode64(JSON.stringify(settings,null,2)+'\n'),sha:latest.sha,branch:'main'})});
+  homeSettings=settings;renderHomeForm();
+  homeMessage('Página inicial salva! O site será atualizado após a publicação do GitHub Pages.');
+ }catch(error){homeMessage('Não foi possível salvar: '+error.message,true);}
+ finally{button.disabled=false;}
+};
