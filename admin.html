@@ -55,10 +55,17 @@ footer{text-align:center;color:#795967;font-size:12px;padding:20px}
 <div class="actions" style="margin-top:13px"><button id="connect" class="primary">Conectar ao GitHub</button><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Criar token no GitHub ↗</a></div>
 <p class="muted">O token fica somente na memória desta aba e é apagado quando ela é fechada ou atualizada. Nunca é salvo no código do portal.</p></section>
 <div id="workspace" class="shell hidden">
-<aside class="panel"><h2>Redação SUB</h2><div class="actions" style="margin-bottom:16px"><button id="tabArticles" class="primary" type="button">Matérias</button><button id="tabEditors" type="button">Editoras</button><button id="tabHome" type="button">Página inicial</button></div><div id="articleSidebar"><h2>Matérias</h2><div class="actions"><button id="new" class="coral">+ Nova matéria</button><button id="reload">Atualizar lista</button></div>
+<aside class="panel"><h2>Redação SUB</h2><div class="actions" style="margin-bottom:16px"><button id="tabArticles" class="primary" type="button">Matérias</button><button id="tabEditors" type="button">Editoras</button><button id="tabHome" type="button">Página inicial</button></div><div id="articleSidebar"><div class="notice" style="margin-bottom:18px">
+<strong style="display:block;font-size:16px;margin-bottom:6px">★ Reportagem da semana</strong>
+<p class="muted" style="margin:3px 0 8px">Escolha qual reportagem aparece em destaque na página inicial do SUB.</p>
+<label for="quickFeatured">Selecionar reportagem</label><select id="quickFeatured" aria-label="Escolher reportagem da semana"></select>
+<div class="actions" style="margin-top:10px"><button id="setQuickFeatured" class="coral" type="button">★ Colocar em destaque</button><button id="editQuickFeatured" type="button">Editar reportagem</button></div>
+<p id="quickFeaturedMessage" role="status" aria-live="polite" class="muted" style="margin-bottom:0"></p>
+</div><h2>Matérias</h2><div class="actions"><button id="new" class="coral">+ Nova matéria</button><button id="reload">Atualizar lista</button></div>
 <p class="muted">Selecione uma reportagem para editar.</p><div id="storyList" class="sidebar-list"></div>
 </div><div id="homeSidebar" class="hidden"><h2>Página inicial</h2><p class="muted">Altere a foto grande da abertura, seus textos e a Reportagem da semana.</p><p class="muted">Para alterar o texto completo da reportagem, use a aba Matérias.</p></div><div id="editorsSidebar" class="hidden"><h2>Perfis das editoras</h2><p class="muted">Selecione uma editora e troque a foto ou os dados do perfil.</p><div id="editorList" class="sidebar-list"></div></div><hr class="divider"><button id="disconnect">Sair do editor</button></aside>
-<section class="panel" id="articlePanel"><h1 id="formTitle">Nova matéria</h1><p class="muted">Faça alterações e clique em Salvar no GitHub para publicar.</p>
+<section class="panel" id="articlePanel"><h1 id="formTitle">Nova matéria</h1>
+<div class="notice" id="articleFeaturedNotice" style="margin:12px 0">Escolha uma reportagem à esquerda para editá-la. Use “Colocar em destaque” para definir a matéria da semana.</div><p class="muted">Faça alterações e clique em Salvar no GitHub para publicar.</p>
 <div class="grid2"><div><label for="title">Título da reportagem *</label><input id="title" required placeholder="Título da matéria"></div>
 <div><label for="section">Editoria *</label><select id="section"><option value="campo">Elas em campo</option><option value="profissional">Do sub ao profissional</option><option value="bastidores">Nos bastidores</option></select></div></div>
 <div class="grid2"><div><label for="category">Etiqueta da matéria</label><input id="category" placeholder="Ex.: Sub-17"></div>
@@ -112,4 +119,4 @@ footer{text-align:center;color:#795967;font-size:12px;padding:20px}
 <p id="homeMessage" role="status" aria-live="polite"></p>
 </section></div>
 </main><footer>SUB • Editor de matérias • Hospedagem gratuita GitHub Pages</footer>
-<script src="admin.js?v=20261104-home1"></script></body></html>
+<script src="admin.js?v=20261104-feature2"></script></body></html>
