@@ -326,19 +326,144 @@
   {
     "id": "defesas-cruzamentos",
     "category": "Nos bastidores",
-    "date": "",
-    "time": "7 min de leitura",
+    "date": "01/10/2026",
+    "time": "5 min de leitura",
     "title": "Entre defesas e cruzamentos: Os desafios da profissionalização no futebol feminino em diferentes posições",
-    "summary": "Os bastidores da formação no futebol feminino e os desafios para seguir carreira em diferentes posições.",
-    "short": "Profissionais responsáveis pela formação e os desafios para construir uma trajetória no esporte.",
-    "image": "assets/bastidores.jpg",
+    "summary": "Da preparação técnica ao equilíbrio psicológico, as exigências variam de acordo com cada posição. As experiências de uma goleira e de uma lateral mostram como as particularidades do jogo influenciam a trajetória das atletas até o alto rendimento.",
+    "short": "Se tornar jogadora profissional, vai além dos desafios comuns a todas as atletas. Cada posição apresenta exigências específicas, tanto físicas quanto técnicas e psicológicas, que influenciam diretamente a trajetória de q",
+    "image": "assets/materia-1793821065151-gagub4.png",
     "section": "bastidores",
     "published": true,
     "blocks": [
       {
         "type": "p",
-        "text": "Profissionais responsáveis pela formação e os desafios para construir uma trajetória no esporte."
+        "text": "Se tornar jogadora profissional, vai além dos desafios comuns a todas as atletas. Cada posição apresenta exigências específicas, tanto físicas quanto técnicas e psicológicas, que influenciam diretamente a trajetória de quem sonha em viver do esporte. As experiências de Julia Viana, goleira de 17 anos, e Ana Júlia Moraes, lateral e volante de 18 anos, mostram como esse caminho pode assumir diferentes formas,dentro e fora de campo."
+      },
+      {
+        "type": "p",
+        "text": "A relação de Júlia com o futebol começou ainda na infância, inicialmente como uma brincadeira. Aos 11 anos, pediu aos pais para frequentar uma escolinha e começou a jogar como zagueira. Posteriormente, passou pelo meio-campo até descobrir sua identificação com a posição de goleira, na qual se encontrou pela combinação entre suas características físicas e o interesse pela função."
+      },
+      {
+        "type": "image",
+        "src": "assets/foto-reportagem-1793821068626-vsfc9x.png",
+        "caption": "Julia Viana em treinamento especial para goleiras.",
+        "alt": "image.png"
+      },
+      {
+        "type": "p",
+        "text": "A mudança exigiu adaptação e desenvolvimento de habilidades específicas. Para Júlia, a coragem está entre as principais características de uma goleira, que precisa lidar diretamente com a possibilidade de ser responsabilizada por um resultado negativo, mesmo após uma boa atuação."
+      },
+      {
+        "type": "blockquote",
+        "text": "“Com certeza, pois o goleiro pode ser herói e vilão no mesmo jogo. Trabalho mentalmente para conseguir lidar com isso da melhor forma possível”."
+      },
+      {
+        "type": "p",
+        "text": "A preparação também exige uma rotina específica. As goleiras realizam atividades separadas das demais jogadoras, com exercícios voltados para movimentos específicos, como quedas, saltos, potência, explosão e força. O treinamento busca melhorar o desempenho e reduzir os riscos de lesões."
+      },
+      {
+        "type": "p",
+        "text": "Além da preparação física, a capacidade de reagir aos erros é um dos aspectos importantes da formação na posição. Uma falha pode acontecer mesmo depois de uma sequência de boas defesas, e a atleta precisa evitar que um lance comprometa sua concentração durante o restante da partida."
+      },
+      {
+        "type": "blockquote",
+        "text": "“É difícil lidar com erros, mas tento me manter sempre com a cabeça erguida. Sempre tenho na minha cabeça que nenhum erro pode me definir, da mesma forma que nenhum acerto também me define por completo”."
+      },
+      {
+        "type": "p",
+        "text": "O desafio também passa pela percepção do público sobre a posição. Na avaliação da atleta, a posição precisa receber a mesma compreensão que as demais funções quando uma jogadora apresenta um desempenho abaixo do esperado."
+      },
+      {
+        "type": "blockquote",
+        "text": "“Gostaria que as pessoas entendessem que, da mesma forma que atacantes, zagueiros, meias e laterais têm dias ruins, os goleiros também podem ter.”"
+      },
+      {
+        "type": "h2",
+        "text": "A versatilidade como diferencial"
+      },
+      {
+        "type": "p",
+        "text": "Assim como Julia, Ana Júlia também passou por diferentes posições ao longo da formação esportiva. Sua trajetória começou como lateral-direita na Ferroviária, função que exigiu o desenvolvimento de habilidades técnicas específicas, como o domínio orientado e a precisão nos cruzamentos."
+      },
+      {
+        "type": "image",
+        "src": "assets/foto-reportagem-1793821071254-752ack.jpg",
+        "caption": "Ana Júlia Moraes em jogo pelo Ferroviária.",
+        "alt": "IMG_1294.JPG.jpeg"
+      },
+      {
+        "type": "p",
+        "text": "A lateral participa tanto das ações defensivas quanto das ofensivas. Por isso, precisa controlar a bola em espaços reduzidos, tomar decisões rápidas e encontrar oportunidades para avançar ao ataque. Entre as dificuldades que enfrentou, Ana destaca justamente o aperfeiçoamento dessas habilidades."
+      },
+      {
+        "type": "blockquote",
+        "text": "“Foi a minha maior dificuldade, acredito. E a questão do cruzamento. O lateral tem que ter um cruzamento muito bom. Mas é algo de técnica. Treinando, eu consegui evoluir muito”."
+      },
+      {
+        "type": "p",
+        "text": "Ao longo de sua trajetória, a atleta também atuou como ponta e passou pelo meio-campo, onde desenvolveu uma identificação com a função de volante. A experiência em diferentes posições contribuiu para ampliar suas possibilidades dentro de campo."
+      },
+      {
+        "type": "p",
+        "text": "Para ela, a capacidade de desempenhar diferentes funções pode aumentar as oportunidades de entrar em campo. Isso porque os treinadores também consideram as necessidades táticas da equipe na escolha das jogadoras. Entretanto, a adaptação não elimina as exigências de cada posição."
+      },
+      {
+        "type": "p",
+        "text": "No caso da lateral, o deslocamento constante e a participação nas duas fases do jogo tornam a função fisicamente exigente. Já no meio-campo, a necessidade de acompanhar diferentes setores exige leitura de jogo e concentração durante toda a partida."
+      },
+      {
+        "type": "h2",
+        "text": "Os desafios além das quatro linhas"
+      },
+      {
+        "type": "p",
+        "text": "Apesar das diferenças entre as posições, as experiências das atletas mostram que a profissionalização depende de uma estrutura que ofereça condições adequadas de desenvolvimento. Treinamentos específicos, acompanhamento psicológico, preparação física e oportunidades de competição são fatores fundamentais para a evolução das jogadoras."
+      },
+      {
+        "type": "p",
+        "text": "Ana Júlia, que atua na categoria sub-20 da Portuguesa, relata que a conciliação entre futebol e faculdade representa um dos maiores desafios de sua rotina. Durante o Campeonato Paulista, a equipe realizava três treinamentos semanais e disputava uma partida por semana. A atleta precisava sair dos treinos e seguir diretamente para a faculdade, além de reservar os fins de semana para os estudos."
+      },
+      {
+        "type": "image",
+        "src": "assets/foto-reportagem-1793821073749-jmgdef.jpg",
+        "caption": "Ana Júlia Moraes em jogo pela Portuguesa.",
+        "alt": "IMG_7700.JPG.jpeg"
+      },
+      {
+        "type": "blockquote",
+        "text": "“É muito difícil conciliar a vida de estudante de faculdade com a vida de futebol. [...] O estudo não é algo que eu largaria”."
+      },
+      {
+        "type": "p",
+        "text": "A jogadora também destaca a necessidade de ampliar a estrutura oferecida às atletas. Mesmo reconhecendo as boas condições disponibilizadas pelo clube, considera que a frequência de treinamentos e o acesso à fisioterapia ainda poderiam ser maiores."
+      },
+      {
+        "type": "h2",
+        "text": "O caminho até o alto rendimento"
+      },
+      {
+        "type": "p",
+        "text": "As experiências de Julia e Ana Júlia evidenciam que a formação no futebol feminino envolve necessidades distintas, mas também desafios compartilhados. Enquanto a goleira precisa desenvolver habilidades específicas para lidar com a pressão e reagir rapidamente aos erros, a lateral e a volante enfrentam exigências relacionadas à movimentação, à tomada de decisão e à participação nas diferentes fases do jogo."
+      },
+      {
+        "type": "p",
+        "text": "As trajetórias também mostram que a profissionalização não segue um caminho único e que os desafios ultrapassam as quatro linhas. Enquanto Julia destaca o peso psicológico dos erros e a cobrança direcionada às goleiras, Ana Júlia aponta as dificuldades de conciliar a rotina de treinamentos com a faculdade, além da necessidade de ampliar a frequência das atividades e o acesso à fisioterapia."
+      },
+      {
+        "type": "p",
+        "text": "As diferenças entre as posições reforçam que a preparação das atletas precisa considerar as exigências específicas de cada função. Para que esse desenvolvimento aconteça, porém, não basta o aprimoramento técnico individual: é necessário que os clubes ofereçam estrutura, acompanhamento e condições adequadas de treinamento. Afinal, a construção de uma carreira no futebol depende tanto da preparação dentro de campo quanto das oportunidades disponíveis ao longo da formação"
+      },
+      {
+        "type": "image",
+        "src": "assets/foto-reportagem-1793821075584-ewgj88.png",
+        "caption": "Ana Júlia Moraes e Julia Viana juntas pelo Ferroviária.",
+        "alt": "image.png"
+      },
+      {
+        "type": "p",
+        "text": "Redes sociais: @juliavianasz @anajumoraesboch"
       }
-    ]
+    ],
+    "updatedAt": "2026-11-04T19:37:58.265Z"
   }
 ]
