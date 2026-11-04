@@ -55,9 +55,9 @@ footer{text-align:center;color:#795967;font-size:12px;padding:20px}
 <div class="actions" style="margin-top:13px"><button id="connect" class="primary">Conectar ao GitHub</button><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Criar token no GitHub ↗</a></div>
 <p class="muted">O token fica somente na memória desta aba e é apagado quando ela é fechada ou atualizada. Nunca é salvo no código do portal.</p></section>
 <div id="workspace" class="shell hidden">
-<aside class="panel"><h2>Redação SUB</h2><div class="actions" style="margin-bottom:16px"><button id="tabArticles" class="primary" type="button">Matérias</button><button id="tabEditors" type="button">Editoras</button></div><div id="articleSidebar"><h2>Matérias</h2><div class="actions"><button id="new" class="coral">+ Nova matéria</button><button id="reload">Atualizar lista</button></div>
+<aside class="panel"><h2>Redação SUB</h2><div class="actions" style="margin-bottom:16px"><button id="tabArticles" class="primary" type="button">Matérias</button><button id="tabEditors" type="button">Editoras</button><button id="tabHome" type="button">Página inicial</button></div><div id="articleSidebar"><h2>Matérias</h2><div class="actions"><button id="new" class="coral">+ Nova matéria</button><button id="reload">Atualizar lista</button></div>
 <p class="muted">Selecione uma reportagem para editar.</p><div id="storyList" class="sidebar-list"></div>
-</div><div id="editorsSidebar" class="hidden"><h2>Perfis das editoras</h2><p class="muted">Selecione uma editora e troque a foto ou os dados do perfil.</p><div id="editorList" class="sidebar-list"></div></div><hr class="divider"><button id="disconnect">Sair do editor</button></aside>
+</div><div id="homeSidebar" class="hidden"><h2>Página inicial</h2><p class="muted">Altere a foto grande da abertura, seus textos e a Reportagem da semana.</p><p class="muted">Para alterar o texto completo da reportagem, use a aba Matérias.</p></div><div id="editorsSidebar" class="hidden"><h2>Perfis das editoras</h2><p class="muted">Selecione uma editora e troque a foto ou os dados do perfil.</p><div id="editorList" class="sidebar-list"></div></div><hr class="divider"><button id="disconnect">Sair do editor</button></aside>
 <section class="panel" id="articlePanel"><h1 id="formTitle">Nova matéria</h1><p class="muted">Faça alterações e clique em Salvar no GitHub para publicar.</p>
 <div class="grid2"><div><label for="title">Título da reportagem *</label><input id="title" required placeholder="Título da matéria"></div>
 <div><label for="section">Editoria *</label><select id="section"><option value="campo">Elas em campo</option><option value="profissional">Do sub ao profissional</option><option value="bastidores">Nos bastidores</option></select></div></div>
@@ -90,6 +90,26 @@ footer{text-align:center;color:#795967;font-size:12px;padding:20px}
 <p class="muted">A imagem deve ser preferencialmente quadrada; o site mostrará a foto em formato circular. A imagem anterior não será apagada automaticamente.</p>
 <div class="actions"><button id="saveEditor" class="primary">Salvar perfil no GitHub</button></div>
 <p id="editorMessage" role="status" aria-live="polite"></p>
+</section>
+<section class="panel hidden" id="homePanel">
+<h1>Editar página inicial</h1>
+<p class="muted">Personalize a abertura do Portal SUB e escolha a reportagem em destaque. Tudo será atualizado na Home após salvar.</p>
+<h2>Foto e texto de abertura</h2>
+<label for="homeHeroPhoto">Trocar a foto grande de abertura (JPG, PNG ou WebP, até 4 MB)</label>
+<input id="homeHeroPhoto" type="file" accept="image/jpeg,image/png,image/webp">
+<img id="homeHeroPreview" alt="Imagem atual da abertura do site" style="display:block;width:100%;max-width:560px;max-height:290px;object-fit:cover;border-radius:16px;margin:15px 0">
+<p class="muted">Se não selecionar nova foto, a imagem atual será mantida.</p>
+<label for="homeEyebrow">Texto pequeno sobre o título</label><input id="homeEyebrow" maxlength="150">
+<label for="homeTitle">Título principal da abertura</label><textarea id="homeTitle" rows="2" maxlength="250"></textarea>
+<label for="homeDescription">Descrição da abertura</label><textarea id="homeDescription" rows="3" maxlength="800"></textarea>
+<hr class="divider">
+<h2>Reportagem da semana</h2>
+<p class="muted">Escolha uma das matérias já cadastradas e publicadas. O site exibirá automaticamente seu título, resumo, data e fotografia de capa.</p>
+<label for="featuredStory">Matéria em destaque</label><select id="featuredStory"></select>
+<div id="featuredPreview" class="notice" style="margin-top:12px"></div>
+<p class="muted">Quer modificar o conteúdo ou a foto da matéria? Abra a aba Matérias e edite a reportagem escolhida.</p>
+<div class="actions" style="margin-top:20px"><button id="saveHome" type="button" class="primary">Salvar página inicial no GitHub</button></div>
+<p id="homeMessage" role="status" aria-live="polite"></p>
 </section></div>
 </main><footer>SUB • Editor de matérias • Hospedagem gratuita GitHub Pages</footer>
-<script src="admin.js?v=20261104-3"></script></body></html>
+<script src="admin.js?v=20261104-home1"></script></body></html>
