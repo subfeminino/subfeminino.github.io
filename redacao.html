@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Painel de redação SUB — atualizado</title><meta name="robots" content="noindex,nofollow"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--vinho:#80082e;--coral:#ff8056;--tinta:#361021;--cinza:#795967;--fundo:#fff8f6}*{box-sizing:border-box}
+body{margin:0;background:#f7eff0;color:var(--tinta);font:15px/1.55 'DM Sans',Arial,sans-serif}
+header{background:var(--vinho);color:white;padding:18px max(22px,calc((100vw - 1260px)/2));display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+header strong{font:900 29px 'Playfair Display',serif}header span{color:#ffd1d7;font-size:13px}
+header a{color:#fff;text-decoration:none;border:1px solid #b64d63;border-radius:20px;padding:7px 13px}
+main{max-width:1270px;margin:26px auto;padding:0 18px 45px}.shell{display:grid;grid-template-columns:320px 1fr;gap:21px}
+.panel{background:white;border:1px solid #ead7dc;border-radius:19px;padding:22px;box-shadow:0 2px 8px #6d15300a}
+h1,h2,h3{font-family:'Playfair Display',Georgia,serif}h1{margin:0 0 6px;font-size:31px}h2{font-size:22px;margin:0 0 14px}
+p{margin:8px 0 15px}.muted{color:var(--cinza);font-size:13px}
+label{display:block;font-size:12px;font-weight:800;margin:15px 0 6px}
+input,select,textarea{width:100%;border:1px solid #ddc4cc;border-radius:10px;padding:11px 13px;font:inherit;background:#fff;color:var(--tinta)}
+input:focus,select:focus,textarea:focus,[contenteditable]:focus{outline:2px solid #f9ad8b;outline-offset:1px}
+textarea{min-height:94px;resize:vertical}button{font:700 13px 'DM Sans',sans-serif;border:1px solid #c69ba7;padding:10px 14px;border-radius:10px;cursor:pointer;background:white;color:var(--vinho)}
+button:hover{background:#fff2ee}button.primary{background:var(--vinho);color:white;border-color:var(--vinho)}button.coral{background:var(--coral);border-color:var(--coral);color:var(--vinho)}button:disabled{opacity:.5;cursor:wait}
+.actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.sidebar-list{display:grid;gap:8px;max-height:540px;overflow:auto;margin-top:17px}
+.story{border:1px solid #e2cfd4;padding:12px;border-radius:12px;text-align:left;display:block;width:100%;font-size:13px;line-height:1.35}
+.story.active{border-color:var(--vinho);background:#fff2f4}.story small{display:block;color:#845b69;margin-top:7px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}.divider{border:0;border-top:1px solid #ead7dc;margin:23px 0}
+.toolbar{display:flex;gap:7px;flex-wrap:wrap;background:#faf3f3;border:1px solid #e9d7dc;padding:9px;border-radius:12px 12px 0 0}
+.editor{min-height:280px;max-height:660px;overflow:auto;border:1px solid #e9d7dc;border-top:0;border-radius:0 0 12px 12px;padding:18px 20px;line-height:1.8;background:white}
+.editor p{margin:0 0 13px}.editor h2{font:800 25px 'Playfair Display',serif;color:var(--vinho);margin:22px 0 10px}
+.editor blockquote{border-left:4px solid var(--coral);margin:18px 0;padding:12px 17px;background:#fff3ef;font-style:italic}
+.editor:empty:before{content:"Escreva sua reportagem aqui. Selecione um parágrafo e escolha Subtítulo ou Citação.";color:#9a7d87}
+.notice{padding:12px 15px;border-radius:11px;background:#fff1e8;color:#763728;font-size:13px}
+#message{margin:13px 0;font-size:13px;min-height:20px;white-space:pre-wrap}
+#message.error{color:#a30c2a}#message.ok{color:#236a3c}
+#gate{max-width:650px;margin:0 auto 20px}.hidden{display:none!important}
+img#coverPreview{max-width:280px;max-height:170px;width:auto;border-radius:11px;margin-top:12px;object-fit:cover}
+.toggle{display:flex;align-items:center;gap:9px}.toggle input{width:auto}
+#preview{border:1px solid #ead7dc;border-radius:14px;padding:22px;background:#fff;margin-top:15px}
+#preview h2{font-size:28px}#preview blockquote{border-left:4px solid var(--coral);padding:12px 18px;background:#fff1ed}
+footer{text-align:center;color:#795967;font-size:12px;padding:20px}
+@media(max-width:820px){.shell{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}header{padding:18px}main{margin-top:15px}}
+
+/* Fotografias distribuídas no corpo da reportagem */
+.editor figure.inline-photo{display:block;position:relative;max-width:100%;margin:24px 0;padding:13px;border:1px solid #dfc4cc;border-radius:15px;background:#fff9f7}
+.editor figure.inline-photo img{display:block;width:100%;max-height:460px;object-fit:contain;border-radius:9px;background:#f8eaed}
+.editor figure.inline-photo figcaption{display:block;min-height:38px;margin:10px 0 2px;padding:7px 9px;border-radius:7px;font:13px/1.5 'DM Sans',sans-serif;color:#6f4555;background:#fff;outline:1px dashed #dec3cb}
+.editor figure.inline-photo figcaption:focus{outline:2px solid var(--coral)}
+.editor figure.inline-photo .figure-actions{display:flex;flex-wrap:wrap;gap:7px;margin:11px 0 3px}
+.editor figure.inline-photo .figure-actions button{padding:6px 9px;font-size:12px}
+#preview figure{margin:25px 0}#preview figure img{max-height:390px;width:100%;object-fit:contain;border-radius:11px}
+#preview figcaption{text-align:center;font-size:13px;color:#78535f;margin:8px 0 0}
+</style></head>
+<body><header><div><strong>SUB</strong> <span> Painel de redação</span></div><a href="./" target="_blank" rel="noopener">Ver site público ↗</a></header>
+<main>
+<section id="gate" class="panel"><h1>Acessar editor</h1>
+<p>Use um token pessoal do GitHub com acesso de <strong>Contents: Read and write</strong> somente ao repositório <strong>subfeminino/subfeminino.github.io</strong>.</p>
+<label for="token">Token de acesso (não compartilhe com ninguém)</label><input id="token" type="password" autocomplete="off" placeholder="github_pat_...">
+<div class="actions" style="margin-top:13px"><button id="connect" class="primary">Conectar ao GitHub</button><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Criar token no GitHub ↗</a></div>
+<p class="muted">O token fica somente na memória desta aba e é apagado quando ela é fechada ou atualizada. Nunca é salvo no código do portal.</p></section>
+<div id="workspace" class="shell hidden">
+<aside class="panel"><h2>Redação SUB</h2><div class="actions" style="margin-bottom:16px"><button id="tabArticles" class="primary" type="button">Matérias</button><button id="tabEditors" type="button">Editoras</button><button id="tabHome" type="button">Página inicial</button></div><div id="articleSidebar"><h2>Matérias</h2><div class="actions"><button id="new" class="coral">+ Nova matéria</button><button id="reload">Atualizar lista</button></div>
+<p class="muted">Selecione uma reportagem para editar.</p><div id="storyList" class="sidebar-list"></div>
+</div><div id="homeSidebar" class="hidden"><h2>Página inicial</h2><p class="muted">Altere a foto grande da abertura, seus textos e a Reportagem da semana.</p><p class="muted">Para alterar o texto completo da reportagem, use a aba Matérias.</p></div><div id="editorsSidebar" class="hidden"><h2>Perfis das editoras</h2><p class="muted">Selecione uma editora e troque a foto ou os dados do perfil.</p><div id="editorList" class="sidebar-list"></div></div><hr class="divider"><button id="disconnect">Sair do editor</button></aside>
+<section class="panel" id="articlePanel"><h1 id="formTitle">Nova matéria</h1><p class="muted">Faça alterações e clique em Salvar no GitHub para publicar.</p>
+<div class="grid2"><div><label for="title">Título da reportagem *</label><input id="title" required placeholder="Título da matéria"></div>
+<div><label for="section">Editoria *</label><select id="section"><option value="campo">Elas em campo</option><option value="profissional">Do sub ao profissional</option><option value="bastidores">Nos bastidores</option></select></div></div>
+<div class="grid2"><div><label for="category">Etiqueta da matéria</label><input id="category" placeholder="Ex.: Sub-17"></div>
+<div><label for="date">Data</label><input id="date" type="date"></div></div>
+<label for="summary">Linha fina / resumo *</label><textarea id="summary" placeholder="Resumo abaixo do título"></textarea>
+<label for="cover">Foto de capa (JPG, PNG ou WebP, até 4 MB)</label><input id="cover" type="file" accept="image/jpeg,image/png,image/webp">
+<input id="imagePath" type="hidden"><img id="coverPreview" class="hidden" alt="Prévia da capa">
+<p class="muted">Ao salvar, a fotografia selecionada será enviada para a pasta assets do GitHub.</p>
+<hr class="divider"><h2>Texto completo da matéria</h2>
+<p class="muted"><strong>Agora você pode copiar uma foto e colar aqui com Ctrl + V.</strong> Clique no parágrafo onde ela deve aparecer, cole a imagem e edite a legenda logo abaixo. Você também pode usar “Inserir foto no texto” ou arrastar uma imagem do computador para dentro do editor. Fotos de até 4 MB. Se copiar de um site e não funcionar, salve a imagem no computador ou use a captura de tela (Windows + Shift + S).</p>
+<div class="toolbar" role="toolbar" aria-label="Formatação da reportagem">
+<button type="button" data-format="p">¶ Parágrafo</button>
+<button type="button" data-format="h2">T Subtítulo</button>
+<button type="button" data-format="blockquote">❝ Citação</button>
+<button type="button" id="insertInlineImage" class="coral">▣ Escolher foto do computador</button>
+<button type="button" id="pasteImageButton" class="coral">📋 Colar foto copiada</button><input id="inlineImageFile" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+</div><div id="editor" class="editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Texto da reportagem" spellcheck="true"></div>
+<div class="actions" style="margin-top:20px"><label class="toggle" style="margin:0"><input id="published" type="checkbox" checked> Publicar no site (desmarque para rascunho)</label></div>
+<div class="actions" style="margin-top:19px"><button class="primary" id="save">Salvar no GitHub</button><button id="previewButton">Pré-visualizar</button><button id="delete" style="color:#ac1839">Excluir matéria</button></div>
+<p id="message" role="status" aria-live="polite"></p><div id="preview" class="hidden"></div>
+</section>
+<section class="panel hidden" id="editorsPanel"><h1>Editar perfil da editora</h1>
+<p class="muted">Escolha uma editora na lista à esquerda. Altere o nome, cargo, apresentação ou foto e clique em Salvar perfil. Essas alterações aparecerão na página Sobre.</p>
+<label for="editorName">Nome da editora</label><input id="editorName" maxlength="120" required>
+<label for="editorRole">Cargo</label><input id="editorRole" maxlength="80" required>
+<label for="editorBio">Descrição do perfil</label><textarea id="editorBio" maxlength="1000" required></textarea>
+<label for="editorPhoto">Nova foto (JPG, PNG ou WebP, até 4 MB)</label><input id="editorPhoto" type="file" accept="image/jpeg,image/png,image/webp">
+<img id="editorPhotoPreview" alt="Foto atual ou nova fotografia da editora" style="display:block;width:140px;height:140px;border-radius:50%;object-fit:cover;margin:17px 0;border:3px solid #ffe1d6">
+<p class="muted">A imagem deve ser preferencialmente quadrada; o site mostrará a foto em formato circular. A imagem anterior não será apagada automaticamente.</p>
+<div class="actions"><button id="saveEditor" class="primary">Salvar perfil no GitHub</button></div>
+<p id="editorMessage" role="status" aria-live="polite"></p>
+</section>
+<section class="panel hidden" id="homePanel">
+<h1>Editar página inicial</h1>
+<p class="muted">Personalize a abertura do Portal SUB e escolha a reportagem em destaque. Tudo será atualizado na Home após salvar.</p>
+<h2>Foto e texto de abertura</h2>
+<label for="homeHeroPhoto">Trocar a foto grande de abertura (JPG, PNG ou WebP, até 4 MB)</label>
+<input id="homeHeroPhoto" type="file" accept="image/jpeg,image/png,image/webp">
+<img id="homeHeroPreview" alt="Imagem atual da abertura do site" style="display:block;width:100%;max-width:560px;max-height:290px;object-fit:cover;border-radius:16px;margin:15px 0">
+<p class="muted">Se não selecionar nova foto, a imagem atual será mantida.</p>
+<label for="homeEyebrow">Texto pequeno sobre o título</label><input id="homeEyebrow" maxlength="150">
+<label for="homeTitle">Título principal da abertura</label><textarea id="homeTitle" rows="2" maxlength="250"></textarea>
+<label for="homeDescription">Descrição da abertura</label><textarea id="homeDescription" rows="3" maxlength="800"></textarea>
+<hr class="divider">
+<h2>Reportagem da semana</h2>
+<p class="muted">Escolha uma das matérias já cadastradas e publicadas. O site exibirá automaticamente seu título, resumo, data e fotografia de capa.</p>
+<label for="featuredStory">Matéria em destaque</label><select id="featuredStory"></select>
+<div id="featuredPreview" class="notice" style="margin-top:12px"></div>
+<p class="muted">Quer modificar o conteúdo ou a foto da matéria? Abra a aba Matérias e edite a reportagem escolhida.</p>
+<div class="actions" style="margin-top:20px"><button id="saveHome" type="button" class="primary">Salvar página inicial no GitHub</button></div>
+<p id="homeMessage" role="status" aria-live="polite"></p>
+</section></div>
+</main><footer>SUB • Editor de matérias • Hospedagem gratuita GitHub Pages</footer>
+<script src="admin.js?v=20261104-home2"></script></body></html>
