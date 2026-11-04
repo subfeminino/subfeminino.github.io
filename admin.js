@@ -74,7 +74,7 @@ function readBlocks(){
  for(const node of editor.childNodes)visit(node);
  return blocks;
 }
-function clearForm(){selectedId=null;$('formTitle').textContent='Nova matéria';$('title').value='';$('section').value='campo';$('category').value='';$('date').value=new Date().toISOString().slice(0,10);$('summary').value='';$('imagePath').value='';$('cover').value='';$('coverPreview').classList.add('hidden');$('published').checked=true;renderBlocks([]);$('preview').classList.add('hidden');message('');renderList();renderQuickFeatured();}
+function clearForm(){selectedId=null;$('formTitle').textContent='Nova matéria';$('title').value='';$('section').value='campo';$('category').value='';$('date').value=new Date().toISOString().slice(0,10);$('summary').value='';$('imagePath').value='';$('cover').value='';$('coverPreview').classList.add('hidden');$('published').checked=true;renderBlocks([]);$('preview').classList.add('hidden');message('');renderList();renderQuickFeatured();updateFeaturedShortcut();}
 function openStory(id){const a=articles.find(x=>x.id===id);if(!a)return;selectedId=a.id;$('formTitle').textContent='Editar matéria';$('title').value=a.title||'';$('section').value=a.section||'campo';$('category').value=a.category||'';const parts=(a.date||'').match(/^(\d\d)\/(\d\d)\/(\d{4})$/);$('date').value=parts?parts[3]+'-'+parts[2]+'-'+parts[1]:new Date().toISOString().slice(0,10);$('summary').value=a.summary||'';$('imagePath').value=a.image||'';$('cover').value='';previewImage(a.image||'');$('published').checked=a.published!==false;renderBlocks(a.blocks?.length?a.blocks:a.short?[{type:'p',text:a.short}]:[]);$('preview').classList.add('hidden');message('');renderList();renderQuickFeatured();window.scrollTo({top:0,behavior:'smooth'});}
 function slug(title){return (title||'reportagem').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'').slice(0,65)||'reportagem';}
 function previewImage(src){const img=$('coverPreview');if(!src){img.classList.add('hidden');return;}img.src=src;img.classList.remove('hidden');}
@@ -325,7 +325,24 @@ function renderQuickFeatured(){
  }
  select.value=Array.from(select.options).some(o=>o.value===current)?current:(homeSettings.featuredId||'');
  updateArticleFeaturedNotice();
+ updateFeaturedShortcut();
 }
+function updateFeaturedShortcut(){
+ const button=$('editFeaturedStory'),label=$('featuredStoryLabel');
+ if(!button||!label)return;
+ const featured=articles.find(a=>a.id===homeSettings?.featuredId);
+ label.textContent=featured?featured.title:'Escolha a reportagem na seção acima ou na aba Página inicial';
+ button.disabled=!featured;
+ button.classList.toggle('active',!!featured&&selectedId===featured.id);
+}
+$('editFeaturedStory').onclick=()=>{
+ const featured=articles.find(a=>a.id===homeSettings?.featuredId);
+ if(!featured){message('Nenhuma reportagem da semana foi selecionada.','error');return;}
+ switchPanel('articles');
+ openStory(featured.id);
+ $('formTitle').textContent='Editar reportagem da semana';
+ $('articleFeaturedNotice').textContent='★ Você está editando a reportagem da semana. Texto, capa, legendas e fotos podem ser alterados normalmente.';
+};
 function updateArticleFeaturedNotice(){
  if(!homeSettings)return;
  const featured=articles.find(a=>a.id===homeSettings.featuredId);
@@ -344,6 +361,7 @@ async function setFeaturedArticle(id){
  homeSettings=settings;
  renderQuickFeatured();
  renderHomeForm();
+ updateFeaturedShortcut();
  $('quickFeatured').value=id;
  return chosen;
 }
