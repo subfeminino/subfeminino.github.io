@@ -12,7 +12,7 @@ function encode64(text){const bytes=new TextEncoder().encode(text);let s='';for(
 function decode64(text){let s=atob(text.replace(/\s/g,''));return new TextDecoder().decode(Uint8Array.from(s,c=>c.charCodeAt(0)));}
 async function api(path,opt={}){const response=await fetch(API+path,{...opt,headers:{Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28',Authorization:'Bearer '+token,...opt.headers}});const result=await response.json().catch(()=>({}));if(!response.ok)throw Error((result.message||'Erro ao acessar GitHub')+' (HTTP '+response.status+')');return result;}
 async function readData(){const r=await api(DB+'?t='+Date.now());return {sha:r.sha,list:JSON.parse(decode64(r.content))};}
-async function sync(){const [data,people,home]=await Promise.all([readData(),readEditorData(),readHomeData()]);articles=data.list;editorProfiles=people.list;homeSettings=home.settings;renderList();renderEditorList();renderHomeForm();return data;}
+async function sync(){const [data,people,home]=await Promise.all([readData(),readEditorData(),readHomeData()]);articles=data.list;editorProfiles=people.list;homeSettings=home.settings;renderList();renderEditorList();renderHomeForm();renderQuickFeatured();return data;}
 async function readHomeData(){const r=await api(HOME_DB+'?t='+Date.now());return {sha:r.sha,settings:JSON.parse(decode64(r.content))};}
 async function readEditorData(){const r=await api(EDITORS_DB+'?t='+Date.now());return {sha:r.sha,list:JSON.parse(decode64(r.content))};}
 function renderList(){const parent=$('storyList');parent.innerHTML='';if(!articles.length)parent.textContent='Nenhuma matéria cadastrada.';for(const a of articles){const b=document.createElement('button');b.className='story'+(a.id===selectedId?' active':'');const title=document.createElement('strong');title.textContent=a.title||'Sem título';const small=document.createElement('small');small.textContent=(a.published?'Publicada':'Rascunho')+' · '+(a.category||a.section||'Sem editoria');b.append(title,small);b.onclick=()=>openStory(a.id);parent.append(b);}}
@@ -74,8 +74,8 @@ function readBlocks(){
  for(const node of editor.childNodes)visit(node);
  return blocks;
 }
-function clearForm(){selectedId=null;$('formTitle').textContent='Nova matéria';$('title').value='';$('section').value='campo';$('category').value='';$('date').value=new Date().toISOString().slice(0,10);$('summary').value='';$('imagePath').value='';$('cover').value='';$('coverPreview').classList.add('hidden');$('published').checked=true;renderBlocks([]);$('preview').classList.add('hidden');message('');renderList();}
-function openStory(id){const a=articles.find(x=>x.id===id);if(!a)return;selectedId=a.id;$('formTitle').textContent='Editar matéria';$('title').value=a.title||'';$('section').value=a.section||'campo';$('category').value=a.category||'';const parts=(a.date||'').match(/^(\d\d)\/(\d\d)\/(\d{4})$/);$('date').value=parts?parts[3]+'-'+parts[2]+'-'+parts[1]:new Date().toISOString().slice(0,10);$('summary').value=a.summary||'';$('imagePath').value=a.image||'';$('cover').value='';previewImage(a.image||'');$('published').checked=a.published!==false;renderBlocks(a.blocks?.length?a.blocks:a.short?[{type:'p',text:a.short}]:[]);$('preview').classList.add('hidden');message('');renderList();window.scrollTo({top:0,behavior:'smooth'});}
+function clearForm(){selectedId=null;$('formTitle').textContent='Nova matéria';$('title').value='';$('section').value='campo';$('category').value='';$('date').value=new Date().toISOString().slice(0,10);$('summary').value='';$('imagePath').value='';$('cover').value='';$('coverPreview').classList.add('hidden');$('published').checked=true;renderBlocks([]);$('preview').classList.add('hidden');message('');renderList();renderQuickFeatured();}
+function openStory(id){const a=articles.find(x=>x.id===id);if(!a)return;selectedId=a.id;$('formTitle').textContent='Editar matéria';$('title').value=a.title||'';$('section').value=a.section||'campo';$('category').value=a.category||'';const parts=(a.date||'').match(/^(\d\d)\/(\d\d)\/(\d{4})$/);$('date').value=parts?parts[3]+'-'+parts[2]+'-'+parts[1]:new Date().toISOString().slice(0,10);$('summary').value=a.summary||'';$('imagePath').value=a.image||'';$('cover').value='';previewImage(a.image||'');$('published').checked=a.published!==false;renderBlocks(a.blocks?.length?a.blocks:a.short?[{type:'p',text:a.short}]:[]);$('preview').classList.add('hidden');message('');renderList();renderQuickFeatured();window.scrollTo({top:0,behavior:'smooth'});}
 function slug(title){return (title||'reportagem').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'').slice(0,65)||'reportagem';}
 function previewImage(src){const img=$('coverPreview');if(!src){img.classList.add('hidden');return;}img.src=src;img.classList.remove('hidden');}
 async function uploadImage(file,prefix='materia'){if(file.size>4*1024*1024)throw Error('Imagem maior que 4 MB. Reduza o tamanho.');if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Use JPG, PNG ou WebP.');const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';const path='assets/'+prefix+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+ext;const b64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(file);});await api(path,{method:'PUT',body:JSON.stringify({message:'Adiciona fotografia da matéria SUB',content:b64,branch:'main'}),headers:{'Content-Type':'application/json'}});return path;}
@@ -310,4 +310,58 @@ $('saveHome').onclick=async()=>{
   homeMessage('Página inicial salva! O site será atualizado após a publicação do GitHub Pages.');
  }catch(error){homeMessage('Não foi possível salvar: '+error.message,true);}
  finally{button.disabled=false;}
+};
+
+
+/* Escolha direta da Reportagem da semana na aba Matérias */
+function renderQuickFeatured(){
+ const select=$('quickFeatured');
+ if(!select||!homeSettings)return;
+ const current=select.value||homeSettings.featuredId;
+ select.replaceChildren();
+ for(const story of articles.filter(a=>a.published!==false)){
+  const option=document.createElement('option');
+  option.value=story.id;option.textContent=story.title||'Matéria sem título';select.add(option);
+ }
+ select.value=Array.from(select.options).some(o=>o.value===current)?current:(homeSettings.featuredId||'');
+ updateArticleFeaturedNotice();
+}
+function updateArticleFeaturedNotice(){
+ if(!homeSettings)return;
+ const featured=articles.find(a=>a.id===homeSettings.featuredId);
+ const text=featured?'★ Reportagem da semana atual: '+featured.title:'Ainda não há reportagem da semana selecionada.';
+ const el=$('articleFeaturedNotice');if(el)el.textContent=text;
+ const info=$('quickFeaturedMessage');if(info&&info.dataset.showMessage!=='yes')info.textContent=text;
+}
+async function setFeaturedArticle(id){
+ if(!token){throw Error('Reconecte ao GitHub.');}
+ const chosen=articles.find(a=>a.id===id&&a.published!==false);
+ if(!chosen)throw Error('Selecione uma reportagem publicada.');
+ const latest=await readHomeData();
+ const settings={...latest.settings,featuredId:id};
+ await api(HOME_DB,{method:'PUT',headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({message:'Define Reportagem da semana: '+chosen.title,content:encode64(JSON.stringify(settings,null,2)+'\n'),sha:latest.sha,branch:'main'})});
+ homeSettings=settings;
+ renderQuickFeatured();
+ renderHomeForm();
+ $('quickFeatured').value=id;
+ return chosen;
+}
+$('setQuickFeatured').onclick=async()=>{
+ const button=$('setQuickFeatured'),id=$('quickFeatured').value,m=$('quickFeaturedMessage');
+ button.disabled=true;m.dataset.showMessage='yes';m.textContent='Salvando Reportagem da semana no GitHub...';
+ try{
+  const story=await setFeaturedArticle(id);
+  m.textContent='✓ Destaque salvo: '+story.title+'. Aguarde a publicação do GitHub Pages.';
+ }catch(error){m.textContent='Erro ao mudar o destaque: '+error.message;}
+ finally{button.disabled=false;}
+};
+$('editQuickFeatured').onclick=()=>{
+ const id=$('quickFeatured').value;
+ if(!id){$('quickFeaturedMessage').textContent='Escolha uma reportagem primeiro.';return;}
+ openStory(id);
+};
+$('quickFeatured').onchange=()=>{
+ const m=$('quickFeaturedMessage');
+ m.dataset.showMessage='no';m.textContent='Clique em “Colocar em destaque” para confirmar a troca.';
 };
