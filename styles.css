@@ -9,3 +9,7 @@
 .article-page .article-text figure.article-photo{margin:34px 0 38px;padding:0;text-align:center}
 .article-page .article-text figure.article-photo img{display:block;max-width:100%;width:100%;height:auto;max-height:700px;object-fit:contain;border-radius:15px}
 .article-page .article-text figure.article-photo figcaption{margin:11px auto 0;max-width:760px;text-align:center;color:#f0b6c4;font:400 13px/1.7 var(--sans)}
+
+/* Bola oficial SUB, reproduzida a partir da imagem aprovada */
+.ball.ball-logo{background:transparent;border-radius:0;overflow:visible;width:45px;height:45px;padding:0;display:inline-flex;align-items:center;justify-content:center}
+.ball.ball-logo .icon-logo-img{width:45px;height:45px;object-fit:contain;display:block;flex:none}
