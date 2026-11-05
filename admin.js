@@ -170,6 +170,7 @@ function switchPanel(mode){
  if(editors)openEditorProfile(selectedEditor);
  if(home)renderHomeForm();
 }
+
 function renderEditorList(){
  const el=$('editorList');el.replaceChildren();
  editorProfiles.forEach((p,i)=>{
@@ -180,44 +181,78 @@ function renderEditorList(){
   button.append(name,role);button.onclick=()=>openEditorProfile(i);el.append(button);
  });
 }
-function editorMessage(text,error=false){const el=$('editorMessage');el.textContent=text;el.className=error?'error':'ok';}
+function editorMessage(text,error=false){
+ const el=$('editorMessage');el.textContent=text;el.className=error?'error':'ok';
+}
+function startNewEditor(){
+ selectedEditor=-1;
+ $('editorFormTitle').textContent='Cadastrar nova editora';
+ $('editorName').value='';
+ $('editorRole').value='EDITORA';
+ $('editorBio').value='';
+ $('editorPhoto').value='';
+ $('editorPhotoPreview').removeAttribute('src');
+ $('editorPhotoPreview').style.display='none';
+ $('saveEditor').textContent='Cadastrar e publicar editora';
+ editorMessage('Selecione uma foto e preencha os dados da nova editora.');
+ renderEditorList();
+}
 function openEditorProfile(i){
  if(!editorProfiles[i])return;
  selectedEditor=i;const p=editorProfiles[i];
- $('editorName').value=p[0]||'';$('editorRole').value=p[1]||'';
- $('editorBio').value=p[2]||'';$('editorPhoto').value='';
+ $('editorFormTitle').textContent='Editar perfil da editora';
+ $('editorName').value=p[0]||'';
+ $('editorRole').value=p[1]||'';
+ $('editorBio').value=p[2]||'';
+ $('editorPhoto').value='';
+ $('editorPhotoPreview').style.display='block';
  $('editorPhotoPreview').src='assets/'+p[3];
+ $('saveEditor').textContent='Salvar perfil no GitHub';
  editorMessage('');renderEditorList();
 }
 $('tabArticles').onclick=()=>switchPanel('articles');
 $('tabEditors').onclick=()=>switchPanel('editors');
 $('tabHome').onclick=()=>switchPanel('home');
+$('newEditor').onclick=startNewEditor;
 $('editorPhoto').onchange=()=>{
  const f=$('editorPhoto').files[0];if(!f)return;
- if(f.size>4*1024*1024){editorMessage('A foto não pode ultrapassar 4 MB.',true);$('editorPhoto').value='';return;}
+ if(!['image/jpeg','image/png','image/webp'].includes(f.type)||f.size>4*1024*1024){
+  editorMessage('A foto precisa ser JPG, PNG ou WebP e ter no máximo 4 MB.',true);
+  $('editorPhoto').value='';return;
+ }
+ $('editorPhotoPreview').style.display='block';
  $('editorPhotoPreview').src=URL.createObjectURL(f);
 };
 $('saveEditor').onclick=async()=>{
  if(!token){editorMessage('Entre no painel com seu token.',true);return;}
  const name=$('editorName').value.trim(),role=$('editorRole').value.trim(),bio=$('editorBio').value.trim();
  if(!name||!role||!bio){editorMessage('Preencha nome, cargo e descrição.',true);return;}
- const button=$('saveEditor');button.disabled=true;editorMessage('Salvando alterações...');
+ const isNew=selectedEditor===-1,photo=$('editorPhoto').files[0];
+ if(isNew&&!photo){editorMessage('Selecione uma fotografia para cadastrar a nova editora.',true);return;}
+ const button=$('saveEditor');button.disabled=true;editorMessage(isNew?'Cadastrando nova editora...':'Salvando alterações...');
  try{
   const latest=await readEditorData();
-  const existing=latest.list[selectedEditor];
-  if(!existing)throw Error('Perfil não encontrado. Recarregue a página.');
-  let filename=existing[3];
-  const photo=$('editorPhoto').files[0];
-  if(photo){editorMessage('Enviando a nova fotografia...');const path=await uploadImage(photo,'editora');filename=path.replace(/^assets\//,'');}
-  latest.list[selectedEditor]=[name,role,bio,filename];
-  await api(EDITORS_DB,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'Atualiza perfil da editora '+name,content:encode64(JSON.stringify(latest.list,null,2)+'\n'),sha:latest.sha,branch:'main'})});
+  if(!Array.isArray(latest.list))throw Error('Lista de editoras inválida.');
+  const existing=isNew?null:latest.list[selectedEditor];
+  if(!isNew&&!existing)throw Error('Perfil não encontrado. Atualize a lista.');
+  let filename=existing?.[3]||'';
+  if(photo){
+   editorMessage('Enviando fotografia para o GitHub...');
+   const path=await uploadImage(photo,'editora');
+   filename=path.replace(/^assets\//,'');
+  }
+  const profile=[name,role,bio,filename];
+  if(isNew)latest.list.push(profile);else latest.list[selectedEditor]=profile;
+  await api(EDITORS_DB,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+   message:(isNew?'Cadastra nova editora: ':'Atualiza perfil da editora: ')+name,
+   content:encode64(JSON.stringify(latest.list,null,2)+'\n'),sha:latest.sha,branch:'main'
+  })});
   editorProfiles=latest.list;
-  openEditorProfile(selectedEditor);
-  editorMessage('Perfil salvo com sucesso! A página Sobre será atualizada após a publicação do GitHub Pages.');
+  openEditorProfile(isNew?latest.list.length-1:selectedEditor);
+  editorMessage(isNew?'Nova editora cadastrada! O perfil aparecerá na página Sobre após a publicação do GitHub Pages.':'Perfil salvo! A página Sobre será atualizada após a publicação do GitHub Pages.');
  }catch(err){editorMessage('Não foi possível salvar: '+err.message,true);}
  finally{button.disabled=false;}
 };
-
 
 /* Inserção de fotos no ponto escolhido da reportagem */
 function rememberInsertionPoint(){
