@@ -68,7 +68,7 @@ footer{text-align:center;color:#795967;font-size:12px;padding:20px}
 <small id="featuredStoryLabel">Abrir reportagem em destaque para editar texto, capa e fotos</small>
 </button>
 <div id="storyList" class="sidebar-list"></div>
-</div><div id="homeSidebar" class="hidden"><h2>Página inicial</h2><p class="muted">Altere a foto grande da abertura, seus textos e a Reportagem da semana.</p><p class="muted">Para alterar o texto completo da reportagem, use a aba Matérias.</p></div><div id="editorsSidebar" class="hidden"><h2>Perfis das editoras</h2><p class="muted">Selecione uma editora e troque a foto ou os dados do perfil.</p><div id="editorList" class="sidebar-list"></div></div><hr class="divider"><button id="disconnect">Sair do editor</button></aside>
+</div><div id="homeSidebar" class="hidden"><h2>Página inicial</h2><p class="muted">Altere a foto grande da abertura, seus textos e a Reportagem da semana.</p><p class="muted">Para alterar o texto completo da reportagem, use a aba Matérias.</p></div><div id="editorsSidebar" class="hidden"><h2>Perfis das editoras</h2><button id="newEditor" type="button" class="coral" style="width:100%;margin-bottom:10px">+ Nova editora</button><p class="muted">Cadastre uma nova editora ou selecione um perfil para alterar seus dados e fotografia.</p><div id="editorList" class="sidebar-list"></div></div><hr class="divider"><button id="disconnect">Sair do editor</button></aside>
 <section class="panel" id="articlePanel"><h1 id="formTitle">Nova matéria</h1>
 <div class="notice" id="articleFeaturedNotice" style="margin:12px 0">Escolha uma reportagem à esquerda para editá-la. Use “Colocar em destaque” para definir a matéria da semana.</div><p class="muted">Faça alterações e clique em Salvar no GitHub para publicar.</p>
 <div class="grid2"><div><label for="title">Título da reportagem *</label><input id="title" required placeholder="Título da matéria"></div>
@@ -92,14 +92,14 @@ footer{text-align:center;color:#795967;font-size:12px;padding:20px}
 <div class="actions" style="margin-top:19px"><button class="primary" id="save">Salvar no GitHub</button><button id="previewButton">Pré-visualizar</button><button id="delete" style="color:#ac1839">Excluir matéria</button></div>
 <p id="message" role="status" aria-live="polite"></p><div id="preview" class="hidden"></div>
 </section>
-<section class="panel hidden" id="editorsPanel"><h1>Editar perfil da editora</h1>
-<p class="muted">Escolha uma editora na lista à esquerda. Altere o nome, cargo, apresentação ou foto e clique em Salvar perfil. Essas alterações aparecerão na página Sobre.</p>
+<section class="panel hidden" id="editorsPanel"><h1 id="editorFormTitle">Editar perfil da editora</h1>
+<p class="muted">Selecione uma editora existente ou clique em + Nova editora. Preencha nome, cargo, descrição e fotografia, depois salve para publicar na página Sobre.</p>
 <label for="editorName">Nome da editora</label><input id="editorName" maxlength="120" required>
 <label for="editorRole">Cargo</label><input id="editorRole" maxlength="80" required>
 <label for="editorBio">Descrição do perfil</label><textarea id="editorBio" maxlength="1000" required></textarea>
 <label for="editorPhoto">Nova foto (JPG, PNG ou WebP, até 4 MB)</label><input id="editorPhoto" type="file" accept="image/jpeg,image/png,image/webp">
 <img id="editorPhotoPreview" alt="Foto atual ou nova fotografia da editora" style="display:block;width:140px;height:140px;border-radius:50%;object-fit:cover;margin:17px 0;border:3px solid #ffe1d6">
-<p class="muted">A imagem deve ser preferencialmente quadrada; o site mostrará a foto em formato circular. A imagem anterior não será apagada automaticamente.</p>
+<p class="muted">A imagem deve ser preferencialmente quadrada; o site a mostrará em formato circular. Para novas editoras, a fotografia é obrigatória.</p>
 <div class="actions"><button id="saveEditor" class="primary">Salvar perfil no GitHub</button></div>
 <p id="editorMessage" role="status" aria-live="polite"></p>
 </section>
@@ -124,4 +124,4 @@ footer{text-align:center;color:#795967;font-size:12px;padding:20px}
 <p id="homeMessage" role="status" aria-live="polite"></p>
 </section></div>
 </main><footer>SUB • Editor de matérias • Hospedagem gratuita GitHub Pages</footer>
-<script src="admin.js?v=20261104-feature3"></script></body></html>
+<script src="admin.js?v=20261105-editors2"></script></body></html>
