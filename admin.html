@@ -46,6 +46,14 @@ footer{text-align:center;color:#795967;font-size:12px;padding:20px}
 .editor figure.inline-photo .figure-actions button{padding:6px 9px;font-size:12px}
 #preview figure{margin:25px 0}#preview figure img{max-height:390px;width:100%;object-fit:contain;border-radius:11px}
 #preview figcaption{text-align:center;font-size:13px;color:#78535f;margin:8px 0 0}
+
+/* Editor de corte da foto da home */
+.crop-panel{padding:18px;margin-top:15px;border:1px solid #d9a4ad;background:#fff9f6;border-radius:16px;max-width:760px}
+#coverCropCanvas{display:block;width:100%;max-width:680px;height:auto;aspect-ratio:17/10;background:#ddd;cursor:grab;touch-action:none;border-radius:11px;border:2px solid #80082e}
+#coverCropCanvas.dragging{cursor:grabbing}
+#coverCropZoom{display:block;width:100%;max-width:680px;margin:5px 0 10px;accent-color:#80082e}
+#coverCropStatus{font-size:13px}
+#coverPreview{object-fit:cover}
 </style></head>
 <body><header><div><strong>SUB</strong> <span> Painel de redação</span></div><a href="./" target="_blank" rel="noopener">Ver site público ↗</a></header>
 <main>
@@ -78,6 +86,20 @@ footer{text-align:center;color:#795967;font-size:12px;padding:20px}
 <label for="summary">Linha fina / resumo *</label><textarea id="summary" placeholder="Resumo abaixo do título"></textarea>
 <label for="cover">Foto de capa (JPG, PNG ou WebP, até 4 MB)</label><input id="cover" type="file" accept="image/jpeg,image/png,image/webp">
 <input id="imagePath" type="hidden"><img id="coverPreview" class="hidden" alt="Prévia da capa">
+<div class="actions" style="margin-top:12px"><button type="button" id="openCoverCrop">✂ Ajustar corte da capa para a home</button><span id="coverCropStatus" class="muted" role="status">Recorte proporcional à home (1,7:1).</span></div>
+<div id="coverCropPanel" class="crop-panel hidden" aria-label="Editor de recorte da foto de capa">
+ <h3 style="margin:0 0 5px">Ajustar foto de capa</h3>
+ <p class="muted" style="margin:0 0 12px">Arraste a foto para enquadrar e ajuste o zoom. O retângulo representa como a foto aparecerá nas chamadas da home.</p>
+ <canvas id="coverCropCanvas" width="680" height="400" aria-label="Área de corte da foto: arraste para reposicionar"></canvas>
+ <label for="coverCropZoom">Zoom da imagem <span id="coverCropZoomLabel">100%</span></label>
+ <input id="coverCropZoom" type="range" min="100" max="300" step="1" value="100">
+ <div class="actions" style="margin-top:13px">
+  <button type="button" class="primary" id="applyCoverCrop">✓ Aplicar recorte</button>
+  <button type="button" id="resetCoverCrop">Centralizar imagem</button>
+  <button type="button" id="cancelCoverCrop">Cancelar</button>
+ </div>
+ <p id="coverCropMessage" class="muted" role="status" aria-live="polite"></p>
+</div>
 <p class="muted">Ao salvar, a fotografia selecionada será enviada para a pasta assets do GitHub.</p>
 <hr class="divider"><h2>Texto completo da matéria</h2>
 <p class="muted"><strong>Agora você pode copiar uma foto e colar aqui com Ctrl + V.</strong> Clique no parágrafo onde ela deve aparecer, cole a imagem e edite a legenda logo abaixo. Você também pode usar “Inserir foto no texto” ou arrastar uma imagem do computador para dentro do editor. Fotos de até 4 MB. Se copiar de um site e não funcionar, salve a imagem no computador ou use a captura de tela (Windows + Shift + S).</p>
@@ -124,4 +146,4 @@ footer{text-align:center;color:#795967;font-size:12px;padding:20px}
 <p id="homeMessage" role="status" aria-live="polite"></p>
 </section></div>
 </main><footer>SUB • Editor de matérias • Hospedagem gratuita GitHub Pages</footer>
-<script src="admin.js?v=20261105-editors2"></script></body></html>
+<script src="admin.js?v=20261106-crop1"></script></body></html>
