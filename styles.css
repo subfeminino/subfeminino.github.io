@@ -13,3 +13,7 @@
 /* Bola oficial SUB, reproduzida a partir da imagem aprovada */
 .ball.ball-logo{background:transparent;border-radius:0;overflow:visible;width:45px;height:45px;padding:0;display:inline-flex;align-items:center;justify-content:center}
 .ball.ball-logo .icon-logo-img{width:45px;height:45px;object-fit:contain;display:block;flex:none}
+
+/* Ícones do Radar SUB: mesma bola aprovada usada na identidade do portal. */
+.radar-links .ball.radar-ball-icon{background:transparent;overflow:visible}
+.radar-links .radar-ball-icon img{display:block;width:44px;height:44px;object-fit:contain}
