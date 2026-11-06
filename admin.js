@@ -74,12 +74,12 @@ function readBlocks(){
  for(const node of editor.childNodes)visit(node);
  return blocks;
 }
-function clearForm(){selectedId=null;$('formTitle').textContent='Nova matéria';$('title').value='';$('section').value='campo';$('category').value='';$('date').value=new Date().toISOString().slice(0,10);$('summary').value='';$('imagePath').value='';$('cover').value='';$('coverPreview').classList.add('hidden');$('published').checked=true;renderBlocks([]);$('preview').classList.add('hidden');message('');renderList();renderQuickFeatured();updateFeaturedShortcut();}
-function openStory(id){const a=articles.find(x=>x.id===id);if(!a)return;selectedId=a.id;$('formTitle').textContent='Editar matéria';$('title').value=a.title||'';$('section').value=a.section||'campo';$('category').value=a.category||'';const parts=(a.date||'').match(/^(\d\d)\/(\d\d)\/(\d{4})$/);$('date').value=parts?parts[3]+'-'+parts[2]+'-'+parts[1]:new Date().toISOString().slice(0,10);$('summary').value=a.summary||'';$('imagePath').value=a.image||'';$('cover').value='';previewImage(a.image||'');$('published').checked=a.published!==false;renderBlocks(a.blocks?.length?a.blocks:a.short?[{type:'p',text:a.short}]:[]);$('preview').classList.add('hidden');message('');renderList();renderQuickFeatured();window.scrollTo({top:0,behavior:'smooth'});}
+function clearForm(){selectedId=null;$('formTitle').textContent='Nova matéria';$('title').value='';$('section').value='campo';$('category').value='';$('date').value=new Date().toISOString().slice(0,10);$('summary').value='';$('imagePath').value='';$('cover').value='';clearPreparedCover();$('coverPreview').classList.add('hidden');$('published').checked=true;renderBlocks([]);$('preview').classList.add('hidden');message('');renderList();renderQuickFeatured();updateFeaturedShortcut();}
+function openStory(id){const a=articles.find(x=>x.id===id);if(!a)return;selectedId=a.id;$('formTitle').textContent='Editar matéria';$('title').value=a.title||'';$('section').value=a.section||'campo';$('category').value=a.category||'';const parts=(a.date||'').match(/^(\d\d)\/(\d\d)\/(\d{4})$/);$('date').value=parts?parts[3]+'-'+parts[2]+'-'+parts[1]:new Date().toISOString().slice(0,10);$('summary').value=a.summary||'';$('imagePath').value=a.image||'';$('cover').value='';clearPreparedCover();previewImage(a.image||'');$('published').checked=a.published!==false;renderBlocks(a.blocks?.length?a.blocks:a.short?[{type:'p',text:a.short}]:[]);$('preview').classList.add('hidden');message('');renderList();renderQuickFeatured();window.scrollTo({top:0,behavior:'smooth'});}
 function slug(title){return (title||'reportagem').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'').slice(0,65)||'reportagem';}
 function previewImage(src){const img=$('coverPreview');if(!src){img.classList.add('hidden');return;}img.src=src;img.classList.remove('hidden');}
 async function uploadImage(file,prefix='materia'){if(file.size>4*1024*1024)throw Error('Imagem maior que 4 MB. Reduza o tamanho.');if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Use JPG, PNG ou WebP.');const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';const path='assets/'+prefix+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+ext;const b64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(file);});await api(path,{method:'PUT',body:JSON.stringify({message:'Adiciona fotografia da matéria SUB',content:b64,branch:'main'}),headers:{'Content-Type':'application/json'}});return path;}
-async function save(){if(!token){message('Conecte-se primeiro.','error');return;}const title=$('title').value.trim(),summary=$('summary').value.trim();if(!title||!summary){message('Preencha o título e a linha fina/resumo.','error');return;}const btn=$('save');btn.disabled=true;message('Salvando no GitHub...');try{const latest=await readData();let current=latest.list.find(a=>a.id===selectedId),id=selectedId||slug(title);if(!selectedId){let n=2;while(latest.list.some(a=>a.id===id)){id=slug(title)+'-'+n++;}}let image=$('imagePath').value;const file=$('cover').files[0];if(file){message('Enviando fotografia para o GitHub...');image=await uploadImage(file);}if(!image)throw Error('Escolha uma fotografia para a matéria.');const dateISO=$('date').value;const date=dateISO?dateISO.split('-').reverse().join('/'):'';const blocks=readBlocks();for(const b of blocks){if(b.type==='image'&&b.localId){const file=pendingInlinePhotos.get(b.localId);if(!file)throw Error('Não foi possível encontrar a foto selecionada. Insira novamente.');message('Enviando fotos internas para o GitHub...');b.src=await uploadImage(file,'foto-reportagem');delete b.localId;}else if(b.type==='image'){delete b.localId;}}const bodyText=blocks.filter(b=>b.type!=='image').map(b=>b.text).join(' ');const story={...current,id,title,summary,short:bodyText.slice(0,220),section:$('section').value,category:$('category').value.trim()||$('section').selectedOptions[0].text,date,image,blocks,published:$('published').checked,time:Math.max(1,Math.ceil(bodyText.split(/\s+/).length/200))+' min de leitura',updatedAt:new Date().toISOString()};if(current)latest.list=latest.list.map(a=>a.id===id?story:a);else latest.list.unshift(story);message('Publicando alterações...');await api(DB,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:(current?'Atualiza':'Adiciona')+' matéria: '+title,content:encode64(JSON.stringify(latest.list,null,2)+'\n'),sha:latest.sha,branch:'main'})});articles=latest.list;selectedId=id;$('imagePath').value=image;renderList();message('Matéria salva! O site será atualizado após a publicação do GitHub Pages.','ok');$('formTitle').textContent='Editar matéria';$('cover').value='';previewImage(image);renderBlocks(blocks);}catch(e){message('Não foi possível salvar: '+e.message+'. Se outra pessoa editou ao mesmo tempo, clique em Atualizar lista e tente novamente.','error');}finally{btn.disabled=false;}}
+async function save(){if(!token){message('Conecte-se primeiro.','error');return;}const title=$('title').value.trim(),summary=$('summary').value.trim();if(!title||!summary){message('Preencha o título e a linha fina/resumo.','error');return;}const btn=$('save');btn.disabled=true;message('Salvando no GitHub...');try{const latest=await readData();let current=latest.list.find(a=>a.id===selectedId),id=selectedId||slug(title);if(!selectedId){let n=2;while(latest.list.some(a=>a.id===id)){id=slug(title)+'-'+n++;}}let image=$('imagePath').value;const file=preparedCoverFile;if(file){message('Enviando capa recortada para o GitHub...');image=await uploadImage(file);}if(!image)throw Error('Escolha uma fotografia para a matéria.');const dateISO=$('date').value;const date=dateISO?dateISO.split('-').reverse().join('/'):'';const blocks=readBlocks();for(const b of blocks){if(b.type==='image'&&b.localId){const file=pendingInlinePhotos.get(b.localId);if(!file)throw Error('Não foi possível encontrar a foto selecionada. Insira novamente.');message('Enviando fotos internas para o GitHub...');b.src=await uploadImage(file,'foto-reportagem');delete b.localId;}else if(b.type==='image'){delete b.localId;}}const bodyText=blocks.filter(b=>b.type!=='image').map(b=>b.text).join(' ');const story={...current,id,title,summary,short:bodyText.slice(0,220),section:$('section').value,category:$('category').value.trim()||$('section').selectedOptions[0].text,date,image,blocks,published:$('published').checked,time:Math.max(1,Math.ceil(bodyText.split(/\s+/).length/200))+' min de leitura',updatedAt:new Date().toISOString()};if(current)latest.list=latest.list.map(a=>a.id===id?story:a);else latest.list.unshift(story);message('Publicando alterações...');await api(DB,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:(current?'Atualiza':'Adiciona')+' matéria: '+title,content:encode64(JSON.stringify(latest.list,null,2)+'\n'),sha:latest.sha,branch:'main'})});articles=latest.list;selectedId=id;$('imagePath').value=image;renderList();message('Matéria salva! O site será atualizado após a publicação do GitHub Pages.','ok');$('formTitle').textContent='Editar matéria';$('cover').value='';previewImage(image);renderBlocks(blocks);}catch(e){message('Não foi possível salvar: '+e.message+'. Se outra pessoa editou ao mesmo tempo, clique em Atualizar lista e tente novamente.','error');}finally{btn.disabled=false;}}
 async function removeStory(){if(!selectedId)return message('Selecione uma matéria para excluir.','error');const a=articles.find(a=>a.id===selectedId);if(!confirm('Excluir a matéria "'+a.title+'"? Essa ação retira a matéria do portal.'))return;try{const latest=await readData();latest.list=latest.list.filter(a=>a.id!==selectedId);await api(DB,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'Remove matéria: '+a.title,content:encode64(JSON.stringify(latest.list,null,2)+'\n'),sha:latest.sha,branch:'main'})});articles=latest.list;clearForm();message('Matéria removida. A imagem continuará armazenada no repositório.','ok');}catch(e){message('Erro ao excluir: '+e.message,'error');}}
 function showPreview(){const title=$('title').value||'Título da reportagem';const blocks=readBlocks();$('preview').innerHTML='<h2>'+safe(title)+'</h2><p>'+safe($('summary').value)+'</p>'+blocks.map(b=>b.type==='image'?'<figure><img src="'+safe(b.src||$('editor').querySelector('figure[data-local-id="'+b.localId+'"] img')?.src||'')+'" alt="'+safe(b.alt||'Fotografia')+'"><figcaption>'+safe(b.caption||'')+'</figcaption></figure>':'<'+(b.type==='h2'?'h3':b.type==='blockquote'?'blockquote':'p')+'>'+safe(b.text)+'</'+(b.type==='h2'?'h3':b.type==='blockquote'?'blockquote':'p')+'>').join('');$('preview').classList.remove('hidden');$('preview').scrollIntoView({behavior:'smooth',block:'nearest'});}
 function format(type){$('editor').focus();document.execCommand('formatBlock',false,type==='blockquote'?'blockquote':type==='h2'?'h2':'p');}
@@ -151,7 +151,7 @@ $('connect').onclick=async()=>{const value=$('token').value.trim();if(!value)ret
 $('disconnect').onclick=()=>{token='';articles=[];$('workspace').classList.add('hidden');$('gate').classList.remove('hidden');};
 $('new').onclick=clearForm;$('reload').onclick=async()=>{try{await sync();message('Lista atualizada.','ok');}catch(e){message('Falha ao atualizar: '+e.message,'error');}};
 $('save').onclick=save;$('delete').onclick=removeStory;$('previewButton').onclick=showPreview;
-$('cover').onchange=()=>{const file=$('cover').files[0];if(file)previewImage(URL.createObjectURL(file));};
+
 for(const button of document.querySelectorAll('[data-format]')){button.addEventListener('mousedown',e=>e.preventDefault());button.onclick=()=>format(button.dataset.format);}
 $('editor').addEventListener('paste',pastePlain);
 
@@ -417,4 +417,128 @@ $('editQuickFeatured').onclick=()=>{
 $('quickFeatured').onchange=()=>{
  const m=$('quickFeaturedMessage');
  m.dataset.showMessage='no';m.textContent='Clique em “Colocar em destaque” para confirmar a troca.';
+};
+
+
+/* Editor de capa em proporção 1,7:1: corte local antes de enviar ao GitHub. */
+let preparedCoverFile=null;
+let cropImage=null, cropImageUrl='', cropOffsetX=0, cropOffsetY=0, cropZoom=1;
+let cropDragging=false,cropLastX=0,cropLastY=0,cropPreviousPreview='';
+const cropCanvas=$('coverCropCanvas'),cropContext=cropCanvas.getContext('2d');
+function cropMessage(value){$('coverCropMessage').textContent=value||'';}
+function cropGeometry(){
+ const w=cropCanvas.width,h=cropCanvas.height;
+ if(!cropImage)return {scale:1,dw:w,dh:h};
+ const base=Math.max(w/cropImage.naturalWidth,h/cropImage.naturalHeight);
+ const scale=base*cropZoom;
+ return {scale,dw:cropImage.naturalWidth*scale,dh:cropImage.naturalHeight*scale};
+}
+function limitCropOffsets(){
+ if(!cropImage)return;
+ const {dw,dh}=cropGeometry();
+ cropOffsetX=Math.max((cropCanvas.width-dw)/2,Math.min((dw-cropCanvas.width)/2,cropOffsetX));
+ cropOffsetY=Math.max((cropCanvas.height-dh)/2,Math.min((dh-cropCanvas.height)/2,cropOffsetY));
+}
+function drawCrop(){
+ if(!cropImage)return;
+ limitCropOffsets();const {dw,dh}=cropGeometry(),w=cropCanvas.width,h=cropCanvas.height;
+ cropContext.clearRect(0,0,w,h);
+ cropContext.drawImage(cropImage,(w-dw)/2+cropOffsetX,(h-dh)/2+cropOffsetY,dw,dh);
+}
+function dismissCrop(){
+ $('coverCropPanel').classList.add('hidden');cropDragging=false;cropCanvas.classList.remove('dragging');
+ if(cropImageUrl){URL.revokeObjectURL(cropImageUrl);cropImageUrl='';}
+ cropImage=null;cropMessage('');
+}
+function clearPreparedCover(){
+ preparedCoverFile=null;
+ dismissCrop();
+ $('coverCropStatus').textContent='Recorte proporcional à home (1,7:1).';
+}
+async function startCoverCrop(source){
+ if(!source){message('Escolha uma foto de capa primeiro.','error');return;}
+ dismissCrop();cropPreviousPreview=$('coverPreview').src||'';
+ cropMessage('Carregando foto para ajuste...');
+ const image=new Image();
+ image.crossOrigin='anonymous';
+ try{
+  await new Promise((resolve,reject)=>{
+   image.onload=resolve;image.onerror=()=>reject(Error('Não foi possível carregar essa foto para recorte.'));
+   image.src=source;
+  });
+  cropImage=image;cropZoom=1;cropOffsetX=0;cropOffsetY=0;
+  $('coverCropZoom').value='100';$('coverCropZoomLabel').textContent='100%';
+  $('coverCropPanel').classList.remove('hidden');
+  cropMessage('Arraste a foto para reposicionar. O corte será aplicado ao clicar em Aplicar recorte.');
+  drawCrop();
+ }catch(error){dismissCrop();message(error.message,'error');}
+}
+$('cover').addEventListener('change',()=>{
+ const file=$('cover').files[0];
+ if(!file)return;
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>4*1024*1024){
+  $('cover').value='';message('Escolha uma foto JPG, PNG ou WebP de até 4 MB.','error');return;
+ }
+ preparedCoverFile=null;
+ const url=URL.createObjectURL(file);
+ startCoverCrop(url).finally(()=>URL.revokeObjectURL(url)).catch(error=>message(error.message,'error'));
+ // O arquivo selecionado só será enviado depois que o recorte for aplicado.
+ $('cover').value='';
+});
+$('openCoverCrop').onclick=()=>{
+ if(!$('coverCropPanel').classList.contains('hidden'))return;
+ const src=$('coverPreview').getAttribute('src')||$('imagePath').value;
+ if(!src){message('Selecione uma foto antes de ajustar a capa.','error');return;}
+ startCoverCrop(src);
+};
+$('coverCropZoom').oninput=()=>{
+ if(!cropImage)return;
+ cropZoom=Number($('coverCropZoom').value)/100;
+ $('coverCropZoomLabel').textContent=Math.round(cropZoom*100)+'%';
+ drawCrop();
+};
+cropCanvas.addEventListener('pointerdown',e=>{
+ if(!cropImage)return;
+ cropDragging=true;cropLastX=e.clientX;cropLastY=e.clientY;
+ cropCanvas.setPointerCapture(e.pointerId);cropCanvas.classList.add('dragging');
+});
+cropCanvas.addEventListener('pointermove',e=>{
+ if(!cropDragging||!cropImage)return;
+ const rect=cropCanvas.getBoundingClientRect();
+ cropOffsetX+=(e.clientX-cropLastX)*cropCanvas.width/rect.width;
+ cropOffsetY+=(e.clientY-cropLastY)*cropCanvas.height/rect.height;
+ cropLastX=e.clientX;cropLastY=e.clientY;
+ drawCrop();
+});
+function stopCropDrag(){cropDragging=false;cropCanvas.classList.remove('dragging');}
+cropCanvas.addEventListener('pointerup',stopCropDrag);
+cropCanvas.addEventListener('pointercancel',stopCropDrag);
+$('resetCoverCrop').onclick=()=>{
+ if(!cropImage)return;
+ cropZoom=1;cropOffsetX=0;cropOffsetY=0;
+ $('coverCropZoom').value=100;$('coverCropZoomLabel').textContent='100%';drawCrop();
+};
+$('cancelCoverCrop').onclick=()=>{
+ dismissCrop();previewImage(preparedCoverFile?URL.createObjectURL(preparedCoverFile):$('imagePath').value);
+};
+$('applyCoverCrop').onclick=async()=>{
+ if(!cropImage)return cropMessage('Selecione uma foto para recortar.');
+ const button=$('applyCoverCrop');button.disabled=true;cropMessage('Preparando foto recortada...');
+ try{
+  const output=document.createElement('canvas');output.width=1190;output.height=700;
+  const ctx=output.getContext('2d');const g=cropGeometry();const factor=1190/cropCanvas.width;
+  ctx.drawImage(cropImage,
+   ((cropCanvas.width-g.dw)/2+cropOffsetX)*factor,
+   ((cropCanvas.height-g.dh)/2+cropOffsetY)*factor,
+   g.dw*factor,g.dh*factor);
+  const blob=await new Promise(resolve=>output.toBlob(resolve,'image/jpeg',0.88));
+  if(!blob)throw Error('Não foi possível gerar o recorte.');
+  if(blob.size>4*1024*1024)throw Error('Recorte excedeu 4 MB.');
+  preparedCoverFile=new File([blob],'capa-sub-recortada.jpg',{type:'image/jpeg'});
+  const previewUrl=URL.createObjectURL(preparedCoverFile);
+  previewImage(previewUrl);
+  $('coverCropStatus').textContent='✓ Capa recortada em 1190 × 700 px. Clique em Salvar no GitHub para publicar.';
+  dismissCrop();
+ }catch(error){cropMessage('Não foi possível aplicar: '+error.message);}
+ finally{button.disabled=false;}
 };
