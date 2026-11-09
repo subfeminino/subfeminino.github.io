@@ -67,3 +67,10 @@
 .brasileiro-page .brasileiro-match .paulista-score-row{gap:8px}
 .brasileiro-page .brasileiro-total{max-width:none}
 @media(max-width:740px){.brasileiro-page .brasileiro-dupla{grid-template-columns:1fr}.brasileiro-page .brasileiro-coluna .paulista-round-title{min-height:auto}}
+
+/* Resultado da final da Copa do Mundo Feminina Sub-20 */
+.mundial-page .mundial-match{max-width:900px}
+.mundial-page .mundial-flag{font-size:45px;line-height:1.2;display:block}
+.mundial-page .mundial-penalties{text-align:center;border-top:1px solid #e9d5db;padding-top:16px;display:flex;flex-direction:column;gap:4px}
+.mundial-page .mundial-penalties strong{font-size:21px;color:#80082e}
+.mundial-page .mundial-penalties span{font-size:13px;color:#755361}
