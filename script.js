@@ -33,10 +33,11 @@ function radar(type){if(type&&!radarTypes[type])return notFound();return `<div c
 
 /* Painel do Paulistão Feminino Sub-17: resultados de 07/11 e jogos de volta */
 const paulistaTeams={
+ // Um único escudo por time: o mesmo arquivo nos jogos de ida e volta.
  sp:{name:'São Paulo',short:'SPFC',crest:'https://cdn.freebiesupply.com/logos/large/2x/sao-paulo-1-logo-png-transparent.png',style:'sp'},
- co:{name:'Centro Olímpico',short:'CO',crest:'https://commons.wikimedia.org/wiki/Special:FilePath/Centro%20Ol%C3%ADmpico%20de%20Treinamento%20e%20Pesquisa.png',style:'co'},
- afe:{name:'Ferroviária',short:'AFE',crest:'https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20da%20Ferrovi%C3%A1ria.png',style:'afe'},
- cor:{name:'Corinthians',short:'SCCP',crest:'https://commons.wikimedia.org/wiki/Special:FilePath/Escudo%20do%20Corinthians.png',style:'cor'}
+ co:{name:'Centro Olímpico',short:'CO',crest:'https://www.prefeitura.sp.gov.br/cidade/secretarias/upload/esportes/2019/Fotos%20-%20Not%C3%ADcias/Dezembro/18/122%20Logotipo-NOVO-COTP.png',style:'co'},
+ afe:{name:'Ferroviária',short:'AFE',crest:'https://a.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fsoccer%2F500%2F18126.png',style:'afe'},
+ cor:{name:'Corinthians',short:'SCCP',crest:'https://www.futbox.com/img/v1/d3f/6fa/9f8/1c7/9470e3201e70f5286ad3_zoom.png',style:'cor'}
 };
 function paulistaClub(id){
  const c=paulistaTeams[id];return '<span class="paulista-team"><span class="paulista-crest paulista-crest-'+c.style+'"><img loading="lazy" src="'+c.crest+'" alt="Escudo de '+c.name+'" onerror="this.style.display=\'none\'"><span class="paulista-fallback" aria-hidden="true">'+c.short+'</span></span><strong>'+c.name+'</strong></span>';
