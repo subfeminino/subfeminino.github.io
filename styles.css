@@ -49,3 +49,12 @@
 .paulista-note p{font-size:14px;margin:8px 0 0}
 .paulista-note a{text-decoration:underline;text-underline-offset:3px;color:#ffc3ac}
 @media(max-width:740px){.paulista-matches{grid-template-columns:1fr}.paulista-match{padding:16px}.paulista-score-row{gap:7px}.paulista-team{font-size:12px}}
+
+/* Brasileiro Feminino Sub-20 — cards no mesmo padrão do Paulistão */
+.brasileiro-page .brasileiro-single{grid-template-columns:minmax(0,1fr);max-width:940px}
+.brasileiro-page .brasileiro-match{max-width:940px}
+.brasileiro-page .brasileiro-total{background:#982147;border:1px solid #b54f65;border-radius:18px;padding:20px 24px;max-width:940px;margin:28px 0 42px;color:#fff}
+.brasileiro-page .brasileiro-total strong{font-weight:800}
+.brasileiro-page .brasileiro-total h2{font:900 clamp(25px,3.4vw,35px)/1.2 var(--serif);margin:8px 0;color:#fff}
+.brasileiro-page .brasileiro-total p{color:#f5bfca;margin:0;font-size:13px}
+.paulista-crest-fla{background:transparent;border:0;border-radius:0;box-shadow:none}
