@@ -79,3 +79,9 @@
 .mundial-page .paulista-match{max-width:940px}
 .mundial-page .paulista-crest.mundial-crest{display:flex;align-items:center;justify-content:center;width:56px;height:56px;flex:0 0 56px;background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;overflow:visible}
 .mundial-page .paulista-crest.mundial-crest img{position:static;width:56px;height:56px;object-fit:contain;background:transparent;border:0;border-radius:0;box-shadow:none}
+
+/* Mundial Sub-20: bandeiras soltas como os escudos do Paulistão, sem recipiente ou fundo. */
+.mundial-page .paulista-team > img.mundial-bandeira{display:block;position:static;flex:none;width:70px;height:56px;max-width:none;object-fit:contain;background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;margin:0}
+.mundial-page .mundial-match{background:#fffaf8;color:#461027;border:1px solid #f0c9d1;border-radius:18px}
+.mundial-page .mundial-match .paulista-score strong{color:#80082e}
+.mundial-page .mundial-match .paulista-team strong{color:#461027}
