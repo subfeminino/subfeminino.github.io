@@ -33,14 +33,15 @@ function radar(type){if(type&&!radarTypes[type])return notFound();return `<div c
 
 /* Painel do Paulistão Feminino Sub-17: resultados de 07/11 e jogos de volta */
 const paulistaTeams={
- // Um único escudo por time: o mesmo arquivo nos jogos de ida e volta.
- sp:{name:'São Paulo',short:'SPFC',crest:'https://cdn.freebiesupply.com/logos/large/2x/sao-paulo-1-logo-png-transparent.png',style:'sp'},
- co:{name:'Centro Olímpico',short:'CO',crest:'https://www.prefeitura.sp.gov.br/cidade/secretarias/upload/esportes/2019/Fotos%20-%20Not%C3%ADcias/Dezembro/18/122%20Logotipo-NOVO-COTP.png',style:'co'},
- afe:{name:'Ferroviária',short:'AFE',crest:'https://a.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fsoccer%2F500%2F18126.png',style:'afe'},
- cor:{name:'Corinthians',short:'SCCP',crest:'https://www.futbox.com/img/v1/d3f/6fa/9f8/1c7/9470e3201e70f5286ad3_zoom.png',style:'cor'}
+ // A mesma imagem para cada time nos jogos de ida e volta.
+ sp:{name:'São Paulo',short:'SPFC',crest:'https://commons.wikimedia.org/wiki/Special:FilePath/Brasao_do_Sao_Paulo_Futebol_Clube.svg',style:'sp'},
+ co:{name:'Centro Olímpico',short:'CO',crest:'https://commons.wikimedia.org/wiki/Special:FilePath/Centro_Ol%C3%ADmpico_de_Treinamento_e_Pesquisa.png',style:'co'},
+ afe:{name:'Ferroviária',short:'AFE',crest:'https://commons.wikimedia.org/wiki/Special:FilePath/Escudo_Associa%C3%A7%C3%A3o_Ferrovi%C3%A1ria_de_Esportes.png',style:'afe'},
+ cor:{name:'Corinthians',short:'SCCP',crest:'https://commons.wikimedia.org/wiki/Special:FilePath/Official_Logo_of_Sport_Club_Corinthians_Paulista_crest_2026.png',style:'cor'}
 };
 function paulistaClub(id){
- const c=paulistaTeams[id];return '<span class="paulista-team"><span class="paulista-crest paulista-crest-'+c.style+'"><img loading="lazy" src="'+c.crest+'" alt="Escudo de '+c.name+'" onerror="this.style.display=\'none\'"><span class="paulista-fallback" aria-hidden="true">'+c.short+'</span></span><strong>'+c.name+'</strong></span>';
+ const c=paulistaTeams[id];
+ return '<span class="paulista-team"><span class="paulista-crest paulista-crest-'+c.style+'"><img loading="lazy" src="'+c.crest+'" alt="Escudo de '+c.name+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><span class="paulista-fallback" aria-hidden="true">'+c.short+'</span></span><strong>'+c.name+'</strong></span>';
 }
 function paulistaMatch({home,away,date,time,place,score,status}){
  return '<div class="paulista-match"><div class="paulista-match-meta"><span>'+date+' • '+time+'</span><span class="paulista-status '+(score?'is-finished':'')+'">'+status+'</span></div><div class="paulista-score-row">'+paulistaClub(home)+'<div class="paulista-score">'+(score?'<strong>1 <small>×</small> 1</strong>':'<strong>– <small>×</small> –</strong>')+'<span>'+(score?'Placar final':'Placar a definir')+'</span></div>'+paulistaClub(away)+'</div><p class="paulista-place">⌖ '+place+'</p></div>';
