@@ -58,3 +58,12 @@
 .brasileiro-page .brasileiro-total h2{font:900 clamp(25px,3.4vw,35px)/1.2 var(--serif);margin:8px 0;color:#fff}
 .brasileiro-page .brasileiro-total p{color:#f5bfca;margin:0;font-size:13px}
 .paulista-crest-fla{background:transparent;border:0;border-radius:0;box-shadow:none}
+
+/* Brasileiro Sub-20: dois placares lado a lado como no Paulistão Sub-17 */
+.brasileiro-page .brasileiro-dupla{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:none}
+.brasileiro-page .brasileiro-coluna{min-width:0;display:flex;flex-direction:column}
+.brasileiro-page .brasileiro-coluna .paulista-round-title{min-height:56px;margin-bottom:14px}
+.brasileiro-page .brasileiro-match{max-width:none;flex:1}
+.brasileiro-page .brasileiro-match .paulista-score-row{gap:8px}
+.brasileiro-page .brasileiro-total{max-width:none}
+@media(max-width:740px){.brasileiro-page .brasileiro-dupla{grid-template-columns:1fr}.brasileiro-page .brasileiro-coluna .paulista-round-title{min-height:auto}}
