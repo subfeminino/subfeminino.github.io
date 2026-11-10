@@ -369,7 +369,11 @@
       },
       {
         "type": "p",
-        "text": "Isabela Tomasi, ex-atacante das categorias de base do Santos, reconhece a importância do apoio que recebeu durante sua trajetória. “Eu acho que eu já cresci sendo muito influenciada e sou muito grata por isso, porque eu sei que tem muitas meninas que não têm essa mesma oportunidade”, relata."
+        "text": "Isabela Tomasi, ex-atacante das categorias de base do Santos, reconhece a importância do apoio que recebeu durante sua trajetória."
+      },
+      {
+        "type": "blockquote",
+        "text": "“Eu acho que eu já cresci sendo muito influenciada e sou muito grata por isso, porque eu sei que tem muitas meninas que não têm essa mesma oportunidade”."
       },
       {
         "type": "p",
@@ -522,7 +526,7 @@
     ],
     "published": true,
     "time": "7 min de leitura",
-    "updatedAt": "2026-11-06T18:06:56.665Z"
+    "updatedAt": "2026-11-10T19:52:52.137Z"
   },
   {
     "id": "gabrielle-alves",
