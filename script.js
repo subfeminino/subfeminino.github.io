@@ -44,21 +44,23 @@ function paulistaClub(id){
  const c=paulistaTeams[id];
  return '<span class="paulista-team"><span class="paulista-crest paulista-crest-'+c.style+'"><img loading="lazy" src="'+c.crest+'" alt="Escudo de '+c.name+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><span class="paulista-fallback" aria-hidden="true">'+c.short+'</span></span><strong>'+c.name+'</strong></span>';
 }
-function paulistaMatch({home,away,date,time,place,score,status}){
- return '<div class="paulista-match"><div class="paulista-match-meta"><span>'+date+' • '+time+'</span><span class="paulista-status '+(score?'is-finished':'')+'">'+status+'</span></div><div class="paulista-score-row">'+paulistaClub(home)+'<div class="paulista-score">'+(score?'<strong>1 <small>×</small> 1</strong>':'<strong>– <small>×</small> –</strong>')+'<span>'+(score?'Placar final':'Placar a definir')+'</span></div>'+paulistaClub(away)+'</div><p class="paulista-place">⌖ '+place+'</p></div>';
+function paulistaMatch({home,away,date,time,place,score,status,penalties,qualified}){
+ const played=Array.isArray(score);
+ const shown=played?'<strong>'+score[0]+' <small>×</small> '+score[1]+'</strong>':'<strong>– <small>×</small> –</strong>';
+ const extras=penalties?'<div class="paulista-match-extra"><strong>Pênaltis: '+penalties[0]+' × '+penalties[1]+'</strong><span>'+qualified+' classificado para a final</span></div>':qualified?'<div class="paulista-match-extra"><strong>'+qualified+' classificada para a final</strong></div>':'';
+ return '<div class="paulista-match"><div class="paulista-match-meta"><span>'+date+' • '+time+'</span><span class="paulista-status '+(played?'is-finished':'')+'">'+status+'</span></div><div class="paulista-score-row">'+paulistaClub(home)+'<div class="paulista-score">'+shown+'<span>'+(played?'Placar final':'Placar a definir')+'</span></div>'+paulistaClub(away)+'</div>'+extras+'<p class="paulista-place">⌖ '+place+'</p></div>';
 }
 function paulistaSub17(){
  const ida=[
-  {home:'sp',away:'co',date:'07 NOV',time:'10h',place:'Estádio Gabriel Marques da Silva — Santana de Parnaíba (SP)',score:true,status:'Encerrado'},
-  {home:'afe',away:'cor',date:'07 NOV',time:'15h',place:'CT I9 International Academy — Ribeirão Preto (SP)',score:true,status:'Encerrado'}
+  {home:'sp',away:'co',date:'07 NOV',time:'10h',place:'Estádio Gabriel Marques da Silva — Santana de Parnaíba (SP)',score:[1,1],status:'Encerrado'},
+  {home:'afe',away:'cor',date:'07 NOV',time:'15h',place:'CT I9 International Academy — Ribeirão Preto (SP)',score:[1,1],status:'Encerrado'}
  ];
  const volta=[
-  {home:'co',away:'sp',date:'14 NOV',time:'10h',place:'CERET — São Paulo (SP)',score:false,status:'Próximo jogo'},
-  {home:'cor',away:'afe',date:'15 NOV',time:'15h',place:'Estádio Alfredo Schürig — São Paulo (SP)',score:false,status:'Próximo jogo'}
+  {home:'co',away:'sp',date:'14 NOV',time:'10h',place:'CERET — São Paulo (SP)',score:[1,1],penalties:[4,5],qualified:'São Paulo',status:'Encerrado'},
+  {home:'cor',away:'afe',date:'15 NOV',time:'15h',place:'Estádio Alfredo Schürig — São Paulo (SP)',score:[1,2],qualified:'Ferroviária',status:'Encerrado'}
  ];
- return '<div class="container paulista-page"><a class="paulista-back" href="#/">← Voltar para a home</a><div class="eyebrow">AGENDA SUB • SEMIFINAIS</div><h1>Paulistão Feminino Sub-17</h1><p class="paulista-intro">Acompanhe os resultados dos jogos de ida e os confrontos que definirão as finalistas do Paulista Feminino Sub-17.</p><section class="paulista-round"><div class="paulista-round-title"><h2>Jogos de ida</h2><span>07 de novembro de 2026</span></div><div class="paulista-matches">'+ida.map(paulistaMatch).join('')+'</div></section><section class="paulista-round"><div class="paulista-round-title"><h2>Jogos de volta</h2><span>14 e 15 de novembro de 2026</span></div><div class="paulista-matches">'+volta.map(paulistaMatch).join('')+'</div></section><div class="paulista-note"><strong>Como funciona a classificação?</strong><p>Após os empates por 1 a 1 nos jogos de ida, quem vencer na volta avança à final. Em caso de novo empate, a vaga será definida nos pênaltis.</p><p>Fonte: <a href="https://futebolpaulista.com.br/Noticias/Detalhe.aspx?Noticia=33531" target="_blank" rel="noopener noreferrer">Federação Paulista de Futebol ↗</a>. Resultados atualizados em 9 de novembro de 2026. Os placares dos jogos de volta ainda não estão disponíveis.</p></div></div>';
+ return '<div class="container paulista-page"><a class="paulista-back" href="#/">← Voltar para a home</a><div class="eyebrow">AGENDA SUB • SEMIFINAIS</div><h1>Paulistão Feminino Sub-17</h1><p class="paulista-intro">Confira os placares das semifinais e as equipes classificadas para a decisão: São Paulo e Ferroviária.</p><section class="paulista-round"><div class="paulista-round-title"><h2>Jogos de ida</h2><span>07 de novembro de 2026</span></div><div class="paulista-matches">'+ida.map(paulistaMatch).join('')+'</div></section><section class="paulista-round"><div class="paulista-round-title"><h2>Jogos de volta</h2><span>14 e 15 de novembro de 2026</span></div><div class="paulista-matches">'+volta.map(paulistaMatch).join('')+'</div></section><div class="paulista-note"><strong>Finalistas: São Paulo e Ferroviária</strong><p>O São Paulo avançou após dois empates por 1 a 1 com o Centro Olímpico, vencendo por 5 a 4 nos pênaltis. A Ferroviária superou o Corinthians por 2 a 1 na volta e 3 a 2 no placar agregado.</p><p>Fontes: <a href="https://www.saopaulofc.net/nos-penaltis-sao-paulo-vence-o-centro-olimpico-e-garante-vaga-na-final-do-paulista-f-sub-17/" target="_blank" rel="noopener noreferrer">São Paulo FC ↗</a> e <a href="https://portalmorada.com.br/ferroviaria-vence-corinthians-e-esta-na-final-do-paulista-feminino-sub-17/amp/" target="_blank" rel="noopener noreferrer">Portal Morada ↗</a>. Resultados atualizados em 16 de novembro de 2026.</p></div></div>';
 }
-
 
 /* Brasileiro Feminino Sub-20 — painel de resultados no modelo do Paulistão */
 function brasileiroMatch({home,away,date,time,place,score,matchNumber}){
