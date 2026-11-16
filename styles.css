@@ -85,3 +85,8 @@
 .mundial-page .mundial-match{background:#fffaf8;color:#461027;border:1px solid #f0c9d1;border-radius:18px}
 .mundial-page .mundial-match .paulista-score strong{color:#80082e}
 .mundial-page .mundial-match .paulista-team strong{color:#461027}
+
+/* Classificação e disputa de pênaltis nas semifinais do Paulistão Sub-17 */
+.paulista-match-extra{display:flex;align-items:center;flex-direction:column;gap:3px;text-align:center;padding:0 6px 16px;color:#80082e}
+.paulista-match-extra strong{font-size:14px;font-weight:800}
+.paulista-match-extra span{font-size:12px;color:#795967}
